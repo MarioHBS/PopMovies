@@ -8,4 +8,22 @@
 		<item name="colorAccent">@color/colorAccent</item>
 	</style>
 
+	<style name="Status" parent="TextAppearance.AppCompat.Body1"/>
+
+	<style name="Status.Name">
+		<item name="android:textSize">14sp</item>
+		<item name="android:textColor">@color/dark_text</item>
+		<item name="android:textStyle">bold</item>
+	</style>
+
+	<style name="Status.ScreenName">
+		<item name="android:textSize">12sp</item>
+		<item name="android:textColor">@color/grey_text</item>
+	</style>
+
+	<style name="Status.Text">
+		<item name="android:textSize">12sp</item>
+		<item name="android:textColor">@color/dark_text</item>
+	</style>
+
 </resources>
