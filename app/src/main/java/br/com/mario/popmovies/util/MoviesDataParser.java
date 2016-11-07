@@ -1,7 +1,7 @@
 package br.com.mario.popmovies.util;
 
 import android.content.Context;
-import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.util.Log;
 
 import com.bumptech.glide.Glide;
@@ -17,12 +17,13 @@ import java.util.concurrent.ExecutionException;
 
 import br.com.mario.popmovies.data.Movies;
 
-import static android.R.attr.bitmap;
-import static android.media.CamcorderProfile.get;
 import static com.bumptech.glide.gifdecoder.GifHeaderParser.TAG;
 
 /** Created by MarioH on 03/11/2016. */
 public class MoviesDataParser {
+	private static final String TMDB_BASE_URL = "http://image.tmdb.org/t/p/";
+	private static final String SIZE = "w185";
+
 	public static Movies[] getMovieDataFromJson(Context ctx, String tmdbJsonStr) throws
 			  JSONException, MalformedURLException {
 		// These are the names of the JSON objects that need to be extracted.
@@ -46,7 +47,11 @@ public class MoviesDataParser {
 			listMovie[i] = new Movies(movie.getString(TITLE), movie.getString(POSTER), movie.getString
 					  (DATE), movie.getString(SYNOPSIS), movie.getDouble(VOTE));
 
-			URL url = new URL(baseUrl + movie.getString(POSTER));
+			Uri builtUri = Uri.parse(TMDB_BASE_URL).buildUpon()
+					  .appendPath(SIZE)
+					  .appendEncodedPath(movie.getString(POSTER))
+					  .build();
+			URL url = new URL(builtUri.toString());
 
 			try {
 				listMovie[i].setPoster(Glide.with(ctx).load(url).asBitmap().into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).get());

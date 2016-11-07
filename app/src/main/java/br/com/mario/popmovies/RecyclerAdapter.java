@@ -20,7 +20,6 @@ class RecyclerAdapter extends RecyclerView.Adapter<MovieViewHolder> {
 	}
 
 	static RecyclerAdapter getInstance() {
-		// TODO carregar dados de filmes e inicializar lista
 		List<Movies> movies = new ArrayList<>();
 		return (new RecyclerAdapter(movies));
 	}
