@@ -1,23 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
+<FrameLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:minHeight="?android:attr/listPreferredItemHeight"
 	>
-	<data>
-		<variable
-			name="movie"
-			type="br.com.mario.popmovies.data.Movies"
-		/>
-	</data>
 
-	<FrameLayout
+	<ImageView
+		android:id="@+id/ivPoster"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		>
-		<ImageView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-		   app:imageUrl="@{movie.posterUrl}"
-		/>
-	</FrameLayout>
-</layout>
+		android:adjustViewBounds="true"
+	/>
+</FrameLayout>

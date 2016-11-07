@@ -39,6 +39,6 @@ public class DataBinder {
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}
-		Glide.with(context).load(url1).into(imageView);
+		Glide.with(context).load(url1).centerCrop().into(imageView);
 	}
 }

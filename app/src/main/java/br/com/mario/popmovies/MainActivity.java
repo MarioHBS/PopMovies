@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
 
 		mAdapter = RecyclerAdapter.getInstance();
 
-		listView.setLayoutManager(new GridLayoutManager(this, 3));
+		listView.setLayoutManager(new GridLayoutManager(this, 2));
 		listView.setAdapter(mAdapter);
 	}
 
@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
 				}
 				tmdbJsonStr = buffer.toString();
 
-				return (MoviesDataParser.getMovieDataFromJson(tmdbJsonStr));
+				return (MoviesDataParser.getMovieDataFromJson(getBaseContext(), tmdbJsonStr));
 
 			} catch (IOException e) {
 				Log.e(LOG_TAG, "Error ", e);
