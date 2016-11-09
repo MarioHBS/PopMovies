@@ -1,5 +1,7 @@
 package br.com.mario.popmovies;
 
+import android.graphics.Typeface;
+import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -37,5 +39,12 @@ class MovieViewHolder extends RecyclerView.ViewHolder {
 		positionTv.setText(position + 1 + "º");
 		releaseTv.setText(movie.getReleaseDate());
 		ratingTv.setText(String.format(Locale.getDefault(), "%.1f", movie.getAverage()));
+
+		// compatibilidade para versões 15 ou menores
+		if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) { // 15
+			positionTv.setTypeface(Typeface.create("sans-serif-light", Typeface.NORMAL));
+			releaseTv.setTypeface(Typeface.create("sans-serif-light", Typeface.NORMAL));
+			ratingTv.setTypeface(Typeface.create("sans-serif-light", Typeface.NORMAL));
+		}
 	}
 }

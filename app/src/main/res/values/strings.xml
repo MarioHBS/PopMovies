@@ -6,8 +6,10 @@
 	<string name="release_date">Release Date</string>
 	<string name="rating">Rating</string>
 
-
 	<!-- textos de descrições -->
 	<string name="desc_position">Posição do filme</string>
 	<string name="desc_poster">Imagem promocional do filme</string>
+
+	<string name="tab1_name">POPULAR</string>
+	<string name="tab2_name">TOP_RATED</string>
 </resources>

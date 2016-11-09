@@ -11,11 +11,11 @@
 		android:icon="@drawable/film_reel"
 		android:label="@string/app_name"
 		android:logo="@drawable/film_reel"
+		android:name=".PopMoviesApplication"
 		android:theme="@style/AppTheme"
 		>
 		<activity
 			android:name=".MainActivity"
-		   android:label="@string/app_name"
 			>
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN"/>

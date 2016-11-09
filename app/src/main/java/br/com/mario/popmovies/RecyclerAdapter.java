@@ -12,14 +12,14 @@ import java.util.List;
 import br.com.mario.popmovies.data.Movies;
 
 /** Created by MarioH on 25/10/2016. */
-class RecyclerAdapter extends RecyclerView.Adapter<MovieViewHolder> {
+public class RecyclerAdapter extends RecyclerView.Adapter<MovieViewHolder> {
 	private final List<Movies> movies;
 
 	public RecyclerAdapter(List<Movies> movies) {
 		this.movies = movies;
 	}
 
-	static RecyclerAdapter getInstance() {
+	public static RecyclerAdapter getInstance() {
 		List<Movies> movies = new ArrayList<>();
 		return (new RecyclerAdapter(movies));
 	}
