@@ -2,11 +2,14 @@ package br.com.mario.popmovies;
 
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import org.json.JSONException;
 
@@ -19,15 +22,24 @@ import java.net.URL;
 import java.util.Arrays;
 
 import br.com.mario.popmovies.data.Movies;
+import br.com.mario.popmovies.util.ItemDecoration;
 import br.com.mario.popmovies.util.MoviesDataParser;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity {
 	@BindView(R.id.list_grid_movies)
-	protected RecyclerView listView;
+	protected RecyclerView mRecyclerView;
+	@BindView(R.id.progress)
+	protected ProgressBar mProgress;
+
+	protected ViewPager mViewPager;
 
 	private RecyclerAdapter mAdapter;
+
+	int pastVisiblesItems, visibleItemCount, totalItemCount;
+	private boolean loading = true;
+	int page = 1;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -35,10 +47,39 @@ public class MainActivity extends AppCompatActivity {
 		setContentView(R.layout.activity_main);
 		ButterKnife.bind(this);
 
+		getSupportActionBar().setDisplayShowHomeEnabled(true);
+		getSupportActionBar().setLogo(R.drawable.film_reel);
+		getSupportActionBar().setDisplayUseLogoEnabled(true);
+
 		mAdapter = RecyclerAdapter.getInstance();
 
-		listView.setLayoutManager(new GridLayoutManager(this, 2));
-		listView.setAdapter(mAdapter);
+		final GridLayoutManager mLayoutManager = new GridLayoutManager(this, 2);
+		mRecyclerView.setLayoutManager(mLayoutManager);
+		mRecyclerView.addItemDecoration(new ItemDecoration(10, 2));
+		mRecyclerView.setAdapter(mAdapter);
+
+		mRecyclerView.setVisibility(View.GONE);
+
+		mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+			@Override
+			public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+				if (dy > 0) {
+					visibleItemCount = mLayoutManager.getChildCount();
+					totalItemCount = mLayoutManager.getItemCount();
+					pastVisiblesItems = mLayoutManager.findFirstVisibleItemPosition();
+
+					if (loading) {
+						if ( (visibleItemCount + pastVisiblesItems) >= totalItemCount) {
+							loading = false;
+							Log.v("...", "Last Item Wow !");
+
+							new GetMovies().execute("popular");
+							//Do pagination.. i.e. fetch new data
+						}
+					}
+				}
+			}
+		});
 	}
 
 	@Override
@@ -66,13 +107,16 @@ public class MainActivity extends AppCompatActivity {
 			try {
 				final String BASE_URL = "http://api.themoviedb.org/3/movie";
 				final String TYPE_PATH = params[0]; // dado recuperado das preferências
+				final String PAGE = "page";
 				final String APPID_PARAM = "api_key";
 
 				// http://api.themoviedb.org/3/movie/popular?api_key=080ed140011f67b8a97c64028cb587b4
 
-				Uri builtUri = Uri.parse(BASE_URL).buildUpon().appendPath(TYPE_PATH)
-						  .appendQueryParameter(APPID_PARAM, BuildConfig.TMDB_API_KEY).build();
-				// TODO terminar a construção da URI
+				Uri builtUri = Uri.parse(BASE_URL).buildUpon()
+						  .appendPath(TYPE_PATH)
+						  .appendQueryParameter(PAGE, String.valueOf(page))
+						  .appendQueryParameter(APPID_PARAM, BuildConfig.TMDB_API_KEY)
+						  .build();
 
 				URL url = new URL(builtUri.toString());
 
@@ -113,9 +157,9 @@ public class MainActivity extends AppCompatActivity {
 				Log.e(LOG_TAG, "Error ", e);
 				return (null);
 			} finally {
-				if (urlConnection != null) {
+				if (urlConnection != null)
 					urlConnection.disconnect();
-				}
+
 				if (reader != null) {
 					try {
 						reader.close();
@@ -129,8 +173,12 @@ public class MainActivity extends AppCompatActivity {
 
 		@Override
 		protected void onPostExecute(Movies[] movies) {
-			if (movies != null)
-				mAdapter.setMovies(Arrays.asList(movies));
+			if (movies != null) {
+				mAdapter.setMovies(page++, Arrays.asList(movies));
+
+				mRecyclerView.setVisibility(View.VISIBLE);
+				mProgress.setVisibility(View.GONE);
+			}
 		}
 	}
 }

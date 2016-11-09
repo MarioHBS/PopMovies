@@ -36,7 +36,7 @@ class RecyclerAdapter extends RecyclerView.Adapter<MovieViewHolder> {
 	@Override
 	public void onBindViewHolder(MovieViewHolder holder, int position) {
 		Movies movie = this.movies.get(position);
-		holder.bind(movie);
+		holder.bind(movie, position);
 	}
 
 	@Override
@@ -44,8 +44,9 @@ class RecyclerAdapter extends RecyclerView.Adapter<MovieViewHolder> {
 		return (movies.size());
 	}
 
-	public void setMovies(List<Movies> movies) {
-		this.movies.clear();
+	public void setMovies(int page, List<Movies> movies) {
+		if (page == 1)
+			this.movies.clear();
 		this.movies.addAll(movies);
 		notifyDataSetChanged();
 	}
