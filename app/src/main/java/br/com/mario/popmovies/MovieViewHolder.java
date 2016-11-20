@@ -1,7 +1,9 @@
 package br.com.mario.popmovies;
 
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -11,6 +13,7 @@ import android.widget.TextView;
 import java.util.Locale;
 
 import br.com.mario.popmovies.data.Movies;
+import br.com.mario.popmovies.util.GlobalConstants;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -18,13 +21,13 @@ import butterknife.ButterKnife;
 class MovieViewHolder extends RecyclerView.ViewHolder {
 	@Nullable
 	@BindView(R.id.ivPoster)
-	ImageView posterIv;
+	protected ImageView posterIv;
 	@BindView(R.id.tvPosition)
-	TextView positionTv;
+	protected TextView positionTv;
 	@BindView(R.id.tvRelease)
-	TextView releaseTv;
+	protected TextView releaseTv;
 	@BindView(R.id.tvRating)
-	TextView ratingTv;
+	protected TextView ratingTv;
 
 	MovieViewHolder(View itemView) {
 		super(itemView);
@@ -32,7 +35,7 @@ class MovieViewHolder extends RecyclerView.ViewHolder {
 		ButterKnife.bind(this, itemView);
 	}
 
-	void bind(Movies movie, int position) {
+	void bind(final Movies movie, int position) {
 		if (posterIv != null)
 			posterIv.setImageBitmap(movie.getPoster());
 
@@ -46,5 +49,12 @@ class MovieViewHolder extends RecyclerView.ViewHolder {
 			releaseTv.setTypeface(Typeface.create("sans-serif-light", Typeface.NORMAL));
 			ratingTv.setTypeface(Typeface.create("sans-serif-light", Typeface.NORMAL));
 		}
+
+		itemView.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				PopMoviesApplication.startActivity(DetailActivity.class, movie);
+			}
+		});
 	}
 }

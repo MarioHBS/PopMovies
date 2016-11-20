@@ -8,16 +8,18 @@ import android.graphics.drawable.Drawable;
 public class Movies {
 	private final String title;
 	private final String posterUrl;
+	private final String backdropUrl;
 	private final String releaseDate;
 	private final String synopsis;
 	private final double average;
 
 	private Bitmap poster;
 
-	public Movies(String title, String posterUrl, String releaseDate, String synopsis, double
-			  average) {
+	public Movies(String title, String posterUrl, String backdropUrl, String releaseDate,
+	              String synopsis, double average) {
 		this.title = title;
 		this.posterUrl = posterUrl;
+		this.backdropUrl = backdropUrl;
 		this.releaseDate = releaseDate;
 		this.synopsis = synopsis;
 		this.average = average;
@@ -25,6 +27,14 @@ public class Movies {
 
 	public Bitmap getPoster() {
 		return (poster);//(new BitmapDrawable(ctx.getResources(), bitmap));
+	}
+
+	public void setPoster(Bitmap poster) {
+		this.poster = poster;
+	}
+
+	public String getBackdropUrl() {
+		return (backdropUrl);
 	}
 
 	public double getAverage() {
@@ -45,9 +55,5 @@ public class Movies {
 
 	public String getTitle() {
 		return title;
-	}
-
-	public void setPoster(Bitmap poster) {
-		this.poster = poster;
 	}
 }

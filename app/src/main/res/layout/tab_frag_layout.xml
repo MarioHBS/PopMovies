@@ -9,10 +9,18 @@
 	tools:context="br.com.mario.popmovies.MainActivity"
 	>
 
-	<android.support.v7.widget.RecyclerView
+	<br.com.mario.popmovies.custom.EmptyRecyclerView
 		android:id="@+id/list_grid_movies"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
+	/>
+
+	<TextView
+		android:id="@+id/empty"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="@string/empty_list"
+		android:layout_gravity="center_horizontal"
 	/>
 
 	<ProgressBar

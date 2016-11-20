@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +16,7 @@ import br.com.mario.popmovies.data.Movies;
 public class RecyclerAdapter extends RecyclerView.Adapter<MovieViewHolder> {
 	private final List<Movies> movies;
 
-	public RecyclerAdapter(List<Movies> movies) {
+	private RecyclerAdapter(List<Movies> movies) {
 		this.movies = movies;
 	}
 
@@ -26,9 +27,16 @@ public class RecyclerAdapter extends RecyclerView.Adapter<MovieViewHolder> {
 
 	@Override
 	public MovieViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-		Context ctx = parent.getContext();
+		final Context ctx = parent.getContext();
 		LayoutInflater inflater = LayoutInflater.from(ctx);
 		View statusContainer = inflater.inflate(R.layout.movie_item, parent, false);
+
+//		statusContainer.setOnClickListener(new View.OnClickListener() {
+//			@Override
+//			public void onClick(View v) {
+//				Toast.makeText(ctx, "Clicado", Toast.LENGTH_SHORT).show();
+//			}
+//		});
 
 		return (new MovieViewHolder(statusContainer));
 	}
@@ -46,7 +54,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<MovieViewHolder> {
 
 	public void setMovies(int page, List<Movies> movies) {
 		if (page == 1)
-			this.movies.clear();
+			this.movies.clear(); // ??
 		this.movies.addAll(movies);
 		notifyDataSetChanged();
 	}

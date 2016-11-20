@@ -2,18 +2,16 @@ package br.com.mario.popmovies;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 
 import java.util.List;
 import java.util.Vector;
 
-import br.com.mario.popmovies.frag.TabFragment;
-
 /** Created by MarioH on 08/11/2016. */
-public class PageTabAdapter extends FragmentPagerAdapter {
+class PageTabAdapter extends FragmentStatePagerAdapter {
 	private final List<Fragment> mFrags;
 
-	public PageTabAdapter(FragmentManager fm, Vector<Fragment> fragments) {
+	PageTabAdapter(FragmentManager fm, Vector<Fragment> fragments) {
 		super(fm);
 
 		this.mFrags = fragments;

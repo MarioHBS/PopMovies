@@ -1,9 +1,11 @@
 package br.com.mario.popmovies.frag;
 
 import android.app.Activity;
+import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -13,6 +15,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONException;
 
@@ -21,28 +25,44 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.util.Arrays;
 
 import br.com.mario.popmovies.BuildConfig;
 import br.com.mario.popmovies.R;
 import br.com.mario.popmovies.RecyclerAdapter;
+import br.com.mario.popmovies.custom.EmptyRecyclerView;
 import br.com.mario.popmovies.data.Movies;
+import br.com.mario.popmovies.util.GlobalConstants;
 import br.com.mario.popmovies.util.ItemDecoration;
 import br.com.mario.popmovies.util.MoviesDataParser;
+import br.com.mario.popmovies.util.Utilities;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /** Created by MarioH on 08/11/2016. */
 public class TabFragment extends Fragment {
-	@BindView(R.id.list_grid_movies)
-	protected RecyclerView mRecyclerView;
+	private static final String TAG = TabFragment.class.getSimpleName();
+	private static final String BUNDLE_RECYCLER_LAYOUT = "classname.recycler.layout";
+
+	/** número de colunas do Grid */
+	private final int SPAN_COUNT = 3;
+	/** limite do número de páginas carregadas */
+	private final int PAGE_LIMIT = 3;
+
 	@BindView(R.id.progress)
 	protected ProgressBar mProgress;
+	@BindView(R.id.list_grid_movies)
+	protected EmptyRecyclerView mRecyclerView;
 
-	int pastVisiblesItems, visibleItemCount, totalItemCount;
-	int page = 1;
 	private RecyclerAdapter mAdapter;
+	private GridLayoutManager mLayoutManager;
+
+	private int firstVisibleItem, visibleItemCount, totalItemCount;
+	private int page = 1, pageCount = 1;
+	private int previousTotal = 0;
+	private int visibleThreshold = 4;
 	private boolean loading = true;
 	private String mType;
 
@@ -76,6 +96,14 @@ public class TabFragment extends Fragment {
 		View view = inflater.inflate(R.layout.tab_frag_layout, container, false);
 		ButterKnife.bind(this, view);
 
+		mLayoutManager = new GridLayoutManager(getContext(), SPAN_COUNT);
+		mRecyclerView.setLayoutManager(mLayoutManager);
+
+		TextView emptyTv = ButterKnife.findById(view, R.id.empty);
+		mRecyclerView.setEmptyView(emptyTv);
+
+		setRetainInstance(true);
+
 		return (view);
 	}
 
@@ -94,30 +122,56 @@ public class TabFragment extends Fragment {
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 
-		final GridLayoutManager mLayoutManager = new GridLayoutManager(getContext(), 2);
-		mRecyclerView.setLayoutManager(mLayoutManager);
-		mRecyclerView.addItemDecoration(new ItemDecoration(10, 2));
-		mRecyclerView.setAdapter(mAdapter);
+		if (savedInstanceState == null) {
+			if (Utilities.isOnline())
+				new GetMovies().execute(mType);
+		}
+		else {
+			mProgress.setVisibility(View.GONE);
+			Parcelable savedRecyclerLayoutState = savedInstanceState.getParcelable
+					  (BUNDLE_RECYCLER_LAYOUT);
+			mRecyclerView.getLayoutManager().onRestoreInstanceState(savedRecyclerLayoutState);
+		}
+	}
 
-		mRecyclerView.setVisibility(View.GONE);
+	/**
+	 * Called when the fragment's activity has been created and this
+	 * fragment's view hierarchy instantiated.  It can be used to do final
+	 * initialization once these pieces are in place, such as retrieving
+	 * views or restoring state.  It is also useful for fragments that use
+	 * {@link #setRetainInstance(boolean)} to retain their instance,
+	 * as this callback tells the fragment when it is fully associated with
+	 * the new activity instance.  This is called after {@link #onCreateView}
+	 * and before {@link #onViewStateRestored(Bundle)}.
+	 *
+	 * @param savedInstanceState If the fragment is being re-created from
+	 *                           a previous saved state, this is the state.
+	 */
+	@Override
+	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+
+		mRecyclerView.addItemDecoration(new ItemDecoration(10, SPAN_COUNT));
+		mRecyclerView.setAdapter(mAdapter);
+		//		mRecyclerView.setVisibility(View.GONE); // necessário? já que a lista inicia vazia
 
 		mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
 			@Override
+			public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+				super.onScrollStateChanged(recyclerView, newState);
+			}
+
+			@Override
 			public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+				super.onScrolled(recyclerView, dx, dy);
+
 				if (dy > 0) {
-					visibleItemCount = mLayoutManager.getChildCount();
+					visibleItemCount = mRecyclerView.getChildCount();
 					totalItemCount = mLayoutManager.getItemCount();
-					pastVisiblesItems = mLayoutManager.findFirstVisibleItemPosition();
+					firstVisibleItem = mLayoutManager.findFirstVisibleItemPosition();
 
-					if (loading) {
-						if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
-							loading = false;
-							Log.v("...", "Last Item Wow !");
 
-							new GetMovies().execute("popular");
-							//Do pagination.. i.e. fetch new data
-						}
-					}
+					loadMovieList();
 				}
 			}
 		});
@@ -131,7 +185,39 @@ public class TabFragment extends Fragment {
 	@Override
 	public void onStart() {
 		super.onStart();
-		new GetMovies().execute(mType);
+		//		loadMovieList();
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putParcelable(BUNDLE_RECYCLER_LAYOUT, mLayoutManager.onSaveInstanceState());
+	}
+
+	private void loadMovieList() {
+		if (loading) {
+			if (totalItemCount > previousTotal) {
+				loading = false;
+				previousTotal = totalItemCount;
+
+				Log.i("Yaeye!", "counting: " + pageCount);
+			}
+		}
+		if (pageCount < PAGE_LIMIT && !loading && ((totalItemCount - visibleItemCount) <=
+				  (firstVisibleItem + visibleThreshold))) {
+			// End has been reached
+
+			Log.i("Yaeye!", "end called");
+
+			if (Utilities.isOnline()) {
+				pageCount++;
+				mProgress.setVisibility(View.VISIBLE);
+				new GetMovies().execute(mType);
+
+				loading = true;
+			} else
+				Toast.makeText(getActivity(), "Não há conexão", Toast.LENGTH_SHORT).show();
+		}
 	}
 
 	private class GetMovies extends AsyncTask<String, Void, Movies[]> {
@@ -167,14 +253,16 @@ public class TabFragment extends Fragment {
 				// Create the request to OpenWeatherMap, and open the connection
 				urlConnection = (HttpURLConnection) url.openConnection();
 				urlConnection.setRequestMethod("GET");
+				urlConnection.setConnectTimeout(GlobalConstants.CONNECTION_TIME_LIMIT);
+				urlConnection.setReadTimeout(GlobalConstants.CONNECTION_TIME_LIMIT);
 				urlConnection.connect();
 
 				// Read the input stream into a String
 				InputStream inputStream = urlConnection.getInputStream();
-				if (inputStream == null) {
+				if (inputStream == null)
 					// Nothing to do.
 					return null;
-				}
+
 				reader = new BufferedReader(new InputStreamReader(inputStream));
 
 				String line;
@@ -194,6 +282,10 @@ public class TabFragment extends Fragment {
 
 				return (MoviesDataParser.getMovieDataFromJson(getContext(), tmdbJsonStr));
 
+			} catch (SocketTimeoutException ste) {
+				Log.e(LOG_TAG, "Time to connect exprired: Loading isn't completed", ste);
+				// TODO tratar a não conexão
+				return (null);
 			} catch (IOException e) {
 				Log.e(LOG_TAG, "Error ", e);
 				return (null);

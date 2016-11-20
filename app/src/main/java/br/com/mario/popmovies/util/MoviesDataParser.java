@@ -11,6 +11,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.concurrent.ExecutionException;
@@ -29,6 +30,7 @@ public class MoviesDataParser {
 		// These are the names of the JSON objects that need to be extracted.
 		final String MAIN = "results";
 		final String POSTER = "poster_path";
+		final String BACKDROP = "backdrop_path";
 		final String SYNOPSIS = "overview";
 		final String DATE = "release_date";
 		final String TITLE = "original_title";
@@ -44,8 +46,8 @@ public class MoviesDataParser {
 
 		for (int i = 0; i < tam; i++) {
 			JSONObject movie = movies.getJSONObject(i);
-			listMovie[i] = new Movies(movie.getString(TITLE), movie.getString(POSTER), movie.getString
-					  (DATE), movie.getString(SYNOPSIS), movie.getDouble(VOTE));
+			listMovie[i] = new Movies(movie.getString(TITLE), movie.getString(POSTER), movie
+					  .getString(BACKDROP), movie.getString(DATE), movie.getString(SYNOPSIS), movie.getDouble(VOTE));
 
 			Uri builtUri = Uri.parse(TMDB_POSTER_BASE_URL).buildUpon()
 					  .appendPath(SIZE)
@@ -54,13 +56,16 @@ public class MoviesDataParser {
 			URL url = new URL(builtUri.toString());
 
 			try {
-				listMovie[i].setPoster(Glide.with(ctx).load(builtUri).asBitmap().into(Target.SIZE_ORIGINAL,
-						  Target.SIZE_ORIGINAL).get());
-//				listMovie[i].setPoster(new BitmapDrawable(ctx.getResources(), Glide.with(ctx).load(url).asBitmap().into(-1, -1).get()));
+				listMovie[i].setPoster(Glide.with(ctx).load(builtUri).asBitmap().into(Target
+						  .SIZE_ORIGINAL, Target.SIZE_ORIGINAL).get());
+				//				listMovie[i].setPoster(new BitmapDrawable(ctx.getResources(), Glide.with
+				// (ctx).load(url).asBitmap().into(-1, -1).get()));
 
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			} catch (ExecutionException e) {
+				Log.e(TAG, "getMovieDataFromJson: " + e.getCause(), e);
+				// TODO Tratar: Request failed 404: Not Found
 				e.printStackTrace();
 			}
 
