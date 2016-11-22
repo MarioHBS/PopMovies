@@ -6,4 +6,8 @@
 	<string name="empty_list" translatable="false">Empty List</string>
 	<string name="tab1_name">POPULAR</string>
 	<string name="tab2_name">TOP RATED</string>
+	<string name="rating">Rating</string>
+	<string name="release_date">Release Date</string>
+	<string name="synopsis">Synopsis</string>
+	<string name="reviews">Reviews</string>
 </resources>

@@ -11,9 +11,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URL;
+import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 import br.com.mario.popmovies.data.Movies;
@@ -35,6 +34,7 @@ public class MoviesDataParser {
 		final String DATE = "release_date";
 		final String TITLE = "original_title";
 		final String VOTE = "vote_average";
+		final String ID = "id";
 
 		JSONObject tmdbJson = new JSONObject(tmdbJsonStr);
 		JSONArray movies = tmdbJson.getJSONArray(MAIN);
@@ -42,18 +42,17 @@ public class MoviesDataParser {
 		int tam = movies.length();
 		Movies[] listMovie = new Movies[tam];
 
-		String baseUrl = "http://image.tmdb.org/t/p/w185/";
-
 		for (int i = 0; i < tam; i++) {
 			JSONObject movie = movies.getJSONObject(i);
-			listMovie[i] = new Movies(movie.getString(TITLE), movie.getString(POSTER), movie
-					  .getString(BACKDROP), movie.getString(DATE), movie.getString(SYNOPSIS), movie.getDouble(VOTE));
+			listMovie[i] = new Movies(movie.getInt(ID), movie.getString(TITLE), movie.getString
+					  (POSTER), movie.getString(BACKDROP), movie.getString(DATE), movie.getString
+					  (SYNOPSIS), movie.getDouble(VOTE));
 
 			Uri builtUri = Uri.parse(TMDB_POSTER_BASE_URL).buildUpon()
-					  .appendPath(SIZE)
+					  .appendPath(SIZE) //
+					  // "http://image.tmdb.org/t/p/w185/"
 					  .appendEncodedPath(movie.getString(POSTER))
 					  .build();
-			URL url = new URL(builtUri.toString());
 
 			try {
 				listMovie[i].setPoster(Glide.with(ctx).load(builtUri).asBitmap().into(Target
@@ -73,5 +72,24 @@ public class MoviesDataParser {
 		}
 
 		return (listMovie);
+	}
+
+	public static ArrayList<String> getReviewsDataFromJson(String jsonStr) throws JSONException {
+		// These are the names of the JSON objects that need to be extracted.
+		final String MAIN = "results";
+		final String REVIEW_CONTENT = "content";
+
+		JSONObject tmdbJson = new JSONObject(jsonStr);
+		JSONArray reviewArray = tmdbJson.getJSONArray(MAIN);
+
+		int tam = reviewArray.length();
+		ArrayList<String> list = new ArrayList<>(tam);
+
+		for (int i = 0; i < tam; i++) {
+			JSONObject review = reviewArray.getJSONObject(i);
+			list.add(review.getString(REVIEW_CONTENT));
+		}
+
+		return (list);
 	}
 }

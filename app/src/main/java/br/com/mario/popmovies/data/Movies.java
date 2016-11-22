@@ -1,11 +1,10 @@
 package br.com.mario.popmovies.data;
 
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 
 /** Created by MarioH on 01/11/2016. */
 public class Movies {
+	private final int id;
 	private final String title;
 	private final String posterUrl;
 	private final String backdropUrl;
@@ -15,8 +14,9 @@ public class Movies {
 
 	private Bitmap poster;
 
-	public Movies(String title, String posterUrl, String backdropUrl, String releaseDate,
+	public Movies(int id, String title, String posterUrl, String backdropUrl, String releaseDate,
 	              String synopsis, double average) {
+		this.id = id;
 		this.title = title;
 		this.posterUrl = posterUrl;
 		this.backdropUrl = backdropUrl;
@@ -55,5 +55,9 @@ public class Movies {
 
 	public String getTitle() {
 		return title;
+	}
+
+	public int getId() {
+		return (id);
 	}
 }

@@ -5,7 +5,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.os.StrictMode;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
@@ -18,9 +17,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.ToxicBakery.viewpager.transforms.AccordionTransformer;
-import com.ToxicBakery.viewpager.transforms.DepthPageTransformer;
-import com.ToxicBakery.viewpager.transforms.RotateUpTransformer;
 import com.ToxicBakery.viewpager.transforms.StackTransformer;
 
 import java.util.Vector;
@@ -66,8 +62,8 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		//Save the fragment's instance
-		getSupportFragmentManager().putFragment(outState, "frag1", fragments.get(0));
-		getSupportFragmentManager().putFragment(outState, "frag2", fragments.get(1));
+//		getSupportFragmentManager().putFragment(outState, "frag1", fragments.get(0));
+//		getSupportFragmentManager().putFragment(outState, "frag2", fragments.get(1));
 
 		String ss = searchView.getQuery().toString();
 		outState.putString(KEY_SEARCH_QUERY, ss);
@@ -81,12 +77,12 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 		super.onRestoreInstanceState(savedInstanceState);
 
 		Log.i("FragLife", "Activity: onCreate: " + savedInstanceState);
-//		if (savedInstanceState != null) {
-//			currentQuery = savedInstanceState.getString(KEY_SEARCH_QUERY);
+		if (savedInstanceState != null) {
+			currentQuery = savedInstanceState.getString(KEY_SEARCH_QUERY);
 //
 //			fragments.setElementAt(getSupportFragmentManager().getFragment(savedInstanceState, "frag1"), 0);
 //			fragments.setElementAt(getSupportFragmentManager().getFragment(savedInstanceState, "frag2"), 1);
-//		}
+		}
 	}
 
 	@Override
@@ -105,7 +101,8 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
 		if (!TextUtils.isEmpty(currentQuery)) {
 			searchItem.expandActionView();
-			searchView.setQuery(currentQuery, false);				searchView.clearFocus();
+			searchView.setQuery(currentQuery, false);
+//			searchView.clearFocus();
 		}
 
 //		searchView.setIconifiedByDefault(false);
@@ -117,13 +114,13 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle action bar item clicks here. The action bar will automatically handle clicks on the
 		// Home/Up button, so long as you specify a parent activity in AndroidManifest.xml.
-		int id = item.getItemId();
+//		int id = item.getItemId();
 
-		if (id == R.id.menu_search) {
+//		if (id == R.id.menu_search) {
+//
+//		}
 
-		}
-
-		return super.onOptionsItemSelected(item);
+		return (super.onOptionsItemSelected(item));
 	}
 
 	public void onNewIntent(Intent intent) {

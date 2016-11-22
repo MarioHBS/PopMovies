@@ -4,10 +4,10 @@ import android.app.SearchManager;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -56,7 +56,7 @@ public class SearchActivity extends AppCompatActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.tab_frag_layout);
+		setContentView(R.layout.tab_frag_page);
 		ButterKnife.bind(this);
 
 		mAdapter = RecyclerAdapter.getInstance();
@@ -70,7 +70,7 @@ public class SearchActivity extends AppCompatActivity {
 	protected void onPostCreate(@Nullable Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
 
-		mLayoutManager = new GridLayoutManager(getBaseContext(), SPAN_COUNT);
+		mLayoutManager = new GridLayoutManager(SearchActivity.this, SPAN_COUNT);
 		mRecyclerView.setLayoutManager(mLayoutManager);
 		mRecyclerView.addItemDecoration(new ItemDecoration(10, SPAN_COUNT));
 		mRecyclerView.setAdapter(mAdapter);
@@ -219,7 +219,7 @@ public class SearchActivity extends AppCompatActivity {
 				}
 				tmdbJsonStr = buffer.toString();
 
-				return (MoviesDataParser.getMovieDataFromJson(getBaseContext(), tmdbJsonStr));
+				return (MoviesDataParser.getMovieDataFromJson(SearchActivity.this, tmdbJsonStr));
 
 			} catch (IOException e) {
 				Log.e(LOG_TAG, "Error ", e);

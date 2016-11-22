@@ -1,7 +1,6 @@
 package br.com.mario.popmovies.frag;
 
 import android.app.Activity;
-import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -40,6 +39,8 @@ import br.com.mario.popmovies.util.MoviesDataParser;
 import br.com.mario.popmovies.util.Utilities;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static br.com.mario.popmovies.util.GlobalConstants.APPID_PARAM;
 
 /** Created by MarioH on 08/11/2016. */
 public class TabFragment extends Fragment {
@@ -93,7 +94,7 @@ public class TabFragment extends Fragment {
 			return (null);
 		}
 
-		View view = inflater.inflate(R.layout.tab_frag_layout, container, false);
+		View view = inflater.inflate(R.layout.tab_frag_page, container, false);
 		ButterKnife.bind(this, view);
 
 		mLayoutManager = new GridLayoutManager(getContext(), SPAN_COUNT);
@@ -240,13 +241,14 @@ public class TabFragment extends Fragment {
 				final String BASE_URL = "http://api.themoviedb.org/3/movie";
 				final String TYPE_PATH = params[0]; // dado recuperado das preferências
 				final String PAGE = "page";
-				final String APPID_PARAM = "api_key";
 
 				// http://api.themoviedb.org/3/movie/popular?api_key=080ed140011f67b8a97c64028cb587b4
 
-				Uri builtUri = Uri.parse(BASE_URL).buildUpon().appendPath(TYPE_PATH)
-						  .appendQueryParameter(PAGE, String.valueOf(page)).appendQueryParameter
-									 (APPID_PARAM, BuildConfig.TMDB_API_KEY).build();
+				Uri builtUri = Uri.parse(BASE_URL).buildUpon()
+						  .appendPath(TYPE_PATH)
+						  .appendQueryParameter(PAGE, String.valueOf(page))
+						  .appendQueryParameter(APPID_PARAM, BuildConfig.TMDB_API_KEY)
+						  .build();
 
 				URL url = new URL(builtUri.toString());
 
@@ -274,10 +276,10 @@ public class TabFragment extends Fragment {
 					buffer.append(line).append("\n");
 				}
 
-				if (buffer.length() == 0) {
+				if (buffer.length() == 0)
 					// Stream was empty.  No point in parsing.
 					return (null);
-				}
+
 				tmdbJsonStr = buffer.toString();
 
 				return (MoviesDataParser.getMovieDataFromJson(getContext(), tmdbJsonStr));

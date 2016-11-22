@@ -4,8 +4,10 @@
 
 	<string name="setting">Configurações</string>
 	<string name="position" translatable="false">Position</string>
-	<string name="release_date">Release Date</string>
-	<string name="rating">Rating</string>
+	<string name="release_date">Data de Lançamento</string>
+	<string name="rating">Nota</string>
+	<string name="reviews">Comentários</string>
+	<string name="synopsis">Sinopse</string>
 	<string name="empty_list">Lista Vazia</string>
 
 	<!-- textos de descrições -->
