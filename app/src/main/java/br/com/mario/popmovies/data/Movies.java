@@ -1,9 +1,11 @@
 package br.com.mario.popmovies.data;
 
 import android.graphics.Bitmap;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 /** Created by MarioH on 01/11/2016. */
-public class Movies {
+public class Movies implements Parcelable {
 	private final int id;
 	private final String title;
 	private final String posterUrl;
@@ -23,6 +25,16 @@ public class Movies {
 		this.releaseDate = releaseDate;
 		this.synopsis = synopsis;
 		this.average = average;
+	}
+
+	private Movies(Parcel in) {
+		id = in.readInt();
+		title = in.readString();
+		posterUrl = in.readString();
+		backdropUrl = in.readString();
+		releaseDate = in.readString();
+		synopsis = in.readString();
+		average = in.readDouble();
 	}
 
 	public Bitmap getPoster() {
@@ -60,4 +72,37 @@ public class Movies {
 	public int getId() {
 		return (id);
 	}
+
+	@Override
+	public int describeContents() {
+		return (0);
+	}
+
+	/**
+	 * Flatten this object in to a Parcel.
+	 *
+	 * @param dest  The Parcel in which the object should be written.
+	 * @param flags Additional flags about how the object should be written.
+	 *              May be 0 or {@link #PARCELABLE_WRITE_RETURN_VALUE}.
+	 */
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeInt(id);
+		dest.writeString(title);
+		dest.writeString(posterUrl);
+		dest.writeString(backdropUrl);
+		dest.writeString(releaseDate);
+		dest.writeString(synopsis);
+		dest.writeDouble(average);
+	}
+
+	public static final Parcelable.Creator<Movies> CREATOR = new Parcelable.Creator<Movies>() {
+		public Movies createFromParcel(Parcel in) {
+			return (new Movies(in));
+		}
+
+		public Movies[] newArray(int size) {
+			return (new Movies[size]);
+		}
+	};
 }

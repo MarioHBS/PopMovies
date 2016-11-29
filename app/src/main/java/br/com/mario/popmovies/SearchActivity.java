@@ -13,6 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import org.json.JSONException;
 
@@ -22,8 +23,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 
+import br.com.mario.popmovies.custom.EmptyRecyclerView;
 import br.com.mario.popmovies.data.Movies;
 import br.com.mario.popmovies.util.ItemDecoration;
 import br.com.mario.popmovies.util.MoviesDataParser;
@@ -38,9 +41,10 @@ public class SearchActivity extends AppCompatActivity {
 	private final int SPAN_COUNT = 2;
 	/** limite do número de páginas carregadas */
 	private final int PAGE_LIMIT = 3;
+	private final String key = "array-movie";
 
 	@BindView(R.id.list_grid_movies)
-	protected RecyclerView mRecyclerView;
+	protected EmptyRecyclerView mRecyclerView;
 	@BindView(R.id.progress)
 	protected ProgressBar mProgress;
 
@@ -60,6 +64,15 @@ public class SearchActivity extends AppCompatActivity {
 		ButterKnife.bind(this);
 
 		mAdapter = RecyclerAdapter.getInstance();
+		if (savedInstanceState != null) {
+			ArrayList<Movies> list = savedInstanceState.getParcelableArrayList(key);
+			mAdapter.setMovies(1, list);
+		}
+		mLayoutManager = new GridLayoutManager(SearchActivity.this, SPAN_COUNT);
+		mRecyclerView.setLayoutManager(mLayoutManager);
+
+		TextView emptyTv = ButterKnife.findById(this, R.id.empty);
+		mRecyclerView.setEmptyView(emptyTv);
 
 		// Get the intent, verify the action and get the query
 		Intent intent = getIntent();
@@ -67,11 +80,37 @@ public class SearchActivity extends AppCompatActivity {
 	}
 
 	@Override
+	protected void onRestoreInstanceState(Bundle savedInstanceState) {
+		super.onRestoreInstanceState(savedInstanceState);
+
+//		if (savedInstanceState == null)
+//			new SearchMovie().execute(mQuery);
+//		else {
+//			mProgress.setVisibility(View.GONE);
+//			Parcelable savedRecyclerLayoutState = savedInstanceState.getParcelable
+//					  (BUNDLE_RECYCLER_LAYOUT);
+//			mRecyclerView.getLayoutManager().onRestoreInstanceState(savedRecyclerLayoutState);
+//		}
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+	}
+
+	@Override
 	protected void onPostCreate(@Nullable Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
 
-		mLayoutManager = new GridLayoutManager(SearchActivity.this, SPAN_COUNT);
-		mRecyclerView.setLayoutManager(mLayoutManager);
+		if (savedInstanceState == null)
+			new SearchMovie().execute(mQuery);
+		else {
+			mProgress.setVisibility(View.GONE);
+			Parcelable savedRecyclerLayoutState = savedInstanceState.getParcelable
+					  (BUNDLE_RECYCLER_LAYOUT);
+			mRecyclerView.getLayoutManager().onRestoreInstanceState(savedRecyclerLayoutState);
+		}
+
 		mRecyclerView.addItemDecoration(new ItemDecoration(10, SPAN_COUNT));
 		mRecyclerView.setAdapter(mAdapter);
 
@@ -94,26 +133,15 @@ public class SearchActivity extends AppCompatActivity {
 				}
 			}
 		});
-
-		new SearchMovie().execute(mQuery);
 	}
 
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		outState.putParcelable(BUNDLE_RECYCLER_LAYOUT, mLayoutManager.onSaveInstanceState());
+		outState.putParcelableArrayList(key, (ArrayList<? extends Parcelable>) mAdapter.getList());
 	}
 
-	@Override
-	protected void onRestoreInstanceState(Bundle savedInstanceState) {
-		super.onRestoreInstanceState(savedInstanceState);
-
-		if (savedInstanceState != null) {
-			Parcelable savedRecyclerLayoutState = savedInstanceState.getParcelable
-					  (BUNDLE_RECYCLER_LAYOUT);
-			mRecyclerView.getLayoutManager().onRestoreInstanceState(savedRecyclerLayoutState);
-		}
-	}
 
 	@Override
 	public boolean onSearchRequested() {
@@ -152,7 +180,7 @@ public class SearchActivity extends AppCompatActivity {
 			getSupportActionBar().setTitle(query);
 
 			mQuery = query;
-			loadMovieList();
+//			loadMovieList();
 
 		} else if (Intent.ACTION_VIEW.equals(intent.getAction())) {
 			String uri = intent.getDataString();

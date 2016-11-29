@@ -24,4 +24,8 @@
 		<item name="android:paddingRight">10dp</item>
 		<item name="android:background">@drawable/text_background</item>
 	</style>
+
+	<style name="AppTheme.ProgressAccent">
+		<item name="colorAccent">@color/red_title</item> <!-- Whatever color you want-->
+	</style>
 </resources>

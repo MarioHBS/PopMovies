@@ -7,13 +7,9 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -29,7 +25,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
-import br.com.mario.popmovies.custom.WrapContentViewPager;
+import br.com.mario.popmovies.custom.CustomPager;
 import br.com.mario.popmovies.frag.ReviewFragment;
 import br.com.mario.popmovies.util.GlobalConstants;
 import butterknife.BindView;
@@ -50,14 +46,14 @@ public class DetailActivity extends AppCompatActivity {
 
 	private ReviewPageAdapter mAdapter;
 
-	@BindView(R.id.tv_reviews_counter)
-	protected TextView reviewCounterTv;
+//	@BindView(R.id.tv_reviews_counter)
+//	protected TextView reviewCounterTv;
 	@BindView(R.id.pager_review)
-	protected WrapContentViewPager mReviewPager;
-	@BindView(R.id.left_nav)
-	protected ImageButton leftNav;
-	@BindView(R.id.right_nav)
-	protected ImageButton rightNav;
+	protected CustomPager mReviewPager;
+//	@BindView(R.id.left_nav)
+//	protected ImageButton leftNav;
+//	@BindView(R.id.right_nav)
+//	protected ImageButton rightNav;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -78,14 +74,14 @@ public class DetailActivity extends AppCompatActivity {
 		//		imageView.setImageBitmap(BitmapFactory.decodeByteArray(mPosterImageInByte, 0,
 		// mPosterImageInByte.length));
 
-		FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-		fab.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction
-						  ("Action", null).show();
-			}
-		});
+//		FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+//		fab.setOnClickListener(new View.OnClickListener() {
+//			@Override
+//			public void onClick(View view) {
+//				Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction
+//						  ("Action", null).show();
+//			}
+//		});
 	}
 
 	@Override
@@ -128,13 +124,17 @@ public class DetailActivity extends AppCompatActivity {
 
 	private void setReviewComponents(ArrayList<String> strings) {
 		ArrayList<Fragment> fragList = new ArrayList<>(strings.size());
-		for (int i = 0; i < strings.size(); i++)
-			fragList.add(ReviewFragment.newInstance(strings.get(i)));
+
+		if (strings.size() > 0)
+			for (int i = 0; i < strings.size(); i++)
+				fragList.add(ReviewFragment.newInstance(strings.get(i)));
+		else
+			fragList.add(ReviewFragment.newInstance(null));
 
 		mAdapter = new ReviewPageAdapter(getSupportFragmentManager(), fragList);
 		mReviewPager.setAdapter(mAdapter);
 
-		int tam = strings.size();
+		/*int tam = strings.size();
 
 		if (tam == 0){
 			leftNav.setVisibility(View.GONE);
@@ -162,7 +162,7 @@ public class DetailActivity extends AppCompatActivity {
 					mReviewPager.setCurrentItem(tab);
 				}
 			});
-		}
+		}*/
 	}
 
 	private class ReviewAsync extends AsyncTask<Uri, Void, ArrayList<String>> {
@@ -173,8 +173,8 @@ public class DetailActivity extends AppCompatActivity {
 
 			// These two need to be declared outside the try/catch
 			// so that they can be closed in the finally block.
-			HttpURLConnection urlConnection = null;
-			BufferedReader reader = null;
+			HttpURLConnection urlConnection;
+			BufferedReader reader;
 
 			// Will contain the raw JSON response as a string.
 			String reviewJsonStr;
@@ -225,14 +225,14 @@ public class DetailActivity extends AppCompatActivity {
 		@Override
 		protected void onPostExecute(ArrayList<String> strings) {
 			if (strings != null) {
-				if (strings.isEmpty())
-					reviewCounterTv.setText("0");
-				else {
+//				if (strings.isEmpty())
+//					reviewCounterTv.setText("0");
+//				else {
 					String str = "(" + 1 + "/" + strings.size() + ")";
-					reviewCounterTv.setText(str);
+//					reviewCounterTv.setText(str);
 
 					setReviewComponents(strings);
-				}
+//				}
 			}
 		}
 	} // end of ReviewAsync

@@ -124,7 +124,7 @@ public class TabFragment extends Fragment {
 		super.onViewCreated(view, savedInstanceState);
 
 		if (savedInstanceState == null) {
-			if (Utilities.isOnline())
+//			if (Utilities.isOnline())
 				new GetMovies().execute(mType);
 		}
 		else {
@@ -171,7 +171,6 @@ public class TabFragment extends Fragment {
 					totalItemCount = mLayoutManager.getItemCount();
 					firstVisibleItem = mLayoutManager.findFirstVisibleItemPosition();
 
-
 					loadMovieList();
 				}
 			}
@@ -210,14 +209,14 @@ public class TabFragment extends Fragment {
 
 			Log.i("Yaeye!", "end called");
 
-			if (Utilities.isOnline()) {
+//			if (Utilities.isOnline()) {
 				pageCount++;
 				mProgress.setVisibility(View.VISIBLE);
 				new GetMovies().execute(mType);
 
 				loading = true;
-			} else
-				Toast.makeText(getActivity(), "Não há conexão", Toast.LENGTH_SHORT).show();
+//			} else
+//				Toast.makeText(getActivity(), "Não há conexão", Toast.LENGTH_SHORT).show();
 		}
 	}
 

@@ -65,8 +65,10 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 //		getSupportFragmentManager().putFragment(outState, "frag1", fragments.get(0));
 //		getSupportFragmentManager().putFragment(outState, "frag2", fragments.get(1));
 
-		String ss = searchView.getQuery().toString();
-		outState.putString(KEY_SEARCH_QUERY, ss);
+		if (searchView != null) {
+			String ss = searchView.getQuery().toString();
+			outState.putString(KEY_SEARCH_QUERY, ss);
+		}
 
 		Log.i("FragLife", "Activity: onSaveInstanceState: " + outState);
 		super.onSaveInstanceState(outState);
@@ -102,7 +104,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 		if (!TextUtils.isEmpty(currentQuery)) {
 			searchItem.expandActionView();
 			searchView.setQuery(currentQuery, false);
-//			searchView.clearFocus();
+			searchView.clearFocus();
 		}
 
 //		searchView.setIconifiedByDefault(false);

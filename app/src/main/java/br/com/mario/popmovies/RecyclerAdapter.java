@@ -11,6 +11,8 @@ import java.util.List;
 
 import br.com.mario.popmovies.data.Movies;
 
+import static android.R.id.list;
+
 /** Created by MarioH on 25/10/2016. */
 public class RecyclerAdapter extends RecyclerView.Adapter<MovieViewHolder> {
 	private final List<Movies> movies;
@@ -56,5 +58,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<MovieViewHolder> {
 			this.movies.clear(); // ??
 		this.movies.addAll(movies);
 		notifyDataSetChanged();
+	}
+
+	public List<Movies> getList() {
+		return (this.movies);
 	}
 }

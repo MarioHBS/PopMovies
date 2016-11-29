@@ -20,12 +20,12 @@ import butterknife.ButterKnife;
  */
 public class ReviewFragment extends Fragment {
 	// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-	private static final String ARG_PARAM1 = "synopsis";
+	private static final String ARG_REVIEW = "review";
 
 	@BindView(R.id.review_text)
 	protected TextView reviewTv;
 
-	private String mParam1;
+	private String mReview;
 
 	public ReviewFragment() {
 		// Required empty public constructor
@@ -41,7 +41,7 @@ public class ReviewFragment extends Fragment {
 	public static ReviewFragment newInstance(String param1) {
 		ReviewFragment fragment = new ReviewFragment();
 		Bundle args = new Bundle();
-		args.putString(ARG_PARAM1, param1);
+		args.putString(ARG_REVIEW, param1);
 		fragment.setArguments(args);
 
 		return (fragment);
@@ -51,7 +51,7 @@ public class ReviewFragment extends Fragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		if (getArguments() != null) {
-			mParam1 = getArguments().getString(ARG_PARAM1);
+			mReview = getArguments().getString(ARG_REVIEW);
 		}
 	}
 
@@ -74,6 +74,7 @@ public class ReviewFragment extends Fragment {
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 
-		reviewTv.setText(mParam1);
+		if (mReview != null)
+			reviewTv.setText(mReview);
 	}
 }
