@@ -25,19 +25,19 @@
 		style="@style/MovieTexts"
 	/>
 
-	<TextView
-		android:id="@+id/tvRelease"
-		android:text="@string/release_date"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_alignBottom="@id/ivPoster"
-		android:layout_alignParentLeft="true"
-		android:layout_marginBottom="5dp"
-		android:layout_marginLeft="5dp"
-		android:layout_marginStart="5dp"
-		android:layout_alignParentStart="true"
-		style="@style/MovieTexts"
-	/>
+	<!--<TextView-->
+		<!--android:id="@+id/tvRelease"-->
+		<!--android:text="@string/release_date"-->
+		<!--android:layout_width="wrap_content"-->
+		<!--android:layout_height="wrap_content"-->
+		<!--android:layout_alignBottom="@id/ivPoster"-->
+		<!--android:layout_alignParentLeft="true"-->
+		<!--android:layout_marginBottom="5dp"-->
+		<!--android:layout_marginLeft="5dp"-->
+		<!--android:layout_marginStart="5dp"-->
+		<!--android:layout_alignParentStart="true"-->
+		<!--style="@style/MovieTexts"-->
+	<!--/>-->
 
 	<TextView
 		android:id="@+id/tvRating"

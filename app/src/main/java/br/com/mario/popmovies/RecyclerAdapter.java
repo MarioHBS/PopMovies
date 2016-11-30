@@ -32,13 +32,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<MovieViewHolder> {
 		LayoutInflater inflater = LayoutInflater.from(ctx);
 		View statusContainer = inflater.inflate(R.layout.movie_item, parent, false);
 
-//		statusContainer.setOnClickListener(new View.OnClickListener() {
-//			@Override
-//			public void onClick(View v) {
-//				Toast.makeText(ctx, "Clicado", Toast.LENGTH_SHORT).show();
-//			}
-//		});
-
 		return (new MovieViewHolder(statusContainer));
 	}
 

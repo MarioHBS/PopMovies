@@ -46,7 +46,7 @@ public class CustomPager extends ViewPager {
 		// Account for pagerTitleStrip or pagerTabStrip
 		View tabStrip = getChildAt(0);
 		if (tabStrip instanceof PagerTabStrip) {
-			//				tabStrip.measure(widthMeasureSpec, MeasureSpec.makeMeasureSpec(getMeasuredWidth(), MeasureSpec.UNSPECIFIED));
+			//				do commit: bab53067634d7859099f7ec201065da91652ca27
 			height += tabStrip.getMeasuredHeight();
 		}
 
@@ -65,9 +65,9 @@ public class CustomPager extends ViewPager {
 
 	public int measureFragment(View view) {
 		if (view == null)
-			return 0;
+			return (0);
 
 		view.measure(0, 0);
-		return view.getMeasuredHeight();
+		return (view.getMeasuredHeight());
 	}
 }

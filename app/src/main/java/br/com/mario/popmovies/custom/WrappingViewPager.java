@@ -15,7 +15,7 @@ import android.view.animation.Transformation;
 import br.com.mario.popmovies.ReviewPageAdapter;
 
 /**
- * Created by labsac on 24/11/2016.
+ * Created by Vihaan Verma on 09/09/2015.
  *
  * Fonte: http://stackoverflow.com/a/32488566
  */

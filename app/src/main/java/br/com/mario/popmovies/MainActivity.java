@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 		fragments.add(TabFragment.newInstance("popular"));
 		fragments.add(TabFragment.newInstance("top_rated"));
 
-		PageTabAdapter mPageAdapter = new PageTabAdapter(getSupportFragmentManager(), fragments);
+		MoviesPageTabAdapter mPageAdapter = new MoviesPageTabAdapter(getSupportFragmentManager(), fragments);
 
 		ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
 		//		viewPager.setOffscreenPageLimit(2); // páginas vizinhas a serem carregadas previamente
@@ -61,16 +61,10 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
-		//Save the fragment's instance
-//		getSupportFragmentManager().putFragment(outState, "frag1", fragments.get(0));
-//		getSupportFragmentManager().putFragment(outState, "frag2", fragments.get(1));
+		if (searchView != null)
+			outState.putString(KEY_SEARCH_QUERY, searchView.getQuery().toString());
 
-		if (searchView != null) {
-			String ss = searchView.getQuery().toString();
-			outState.putString(KEY_SEARCH_QUERY, ss);
-		}
-
-		Log.i("FragLife", "Activity: onSaveInstanceState: " + outState);
+//		Log.i("FragLife", "Activity: onSaveInstanceState: " + outState);
 		super.onSaveInstanceState(outState);
 	}
 
@@ -78,13 +72,9 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 	protected void onRestoreInstanceState(Bundle savedInstanceState) {
 		super.onRestoreInstanceState(savedInstanceState);
 
-		Log.i("FragLife", "Activity: onCreate: " + savedInstanceState);
-		if (savedInstanceState != null) {
+//		Log.i("FragLife", "Activity: onCreate: " + savedInstanceState);
+		if (savedInstanceState != null)
 			currentQuery = savedInstanceState.getString(KEY_SEARCH_QUERY);
-//
-//			fragments.setElementAt(getSupportFragmentManager().getFragment(savedInstanceState, "frag1"), 0);
-//			fragments.setElementAt(getSupportFragmentManager().getFragment(savedInstanceState, "frag2"), 1);
-		}
 	}
 
 	@Override
@@ -98,35 +88,21 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 		SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
 		searchView.setSearchableInfo(searchManager.getSearchableInfo(new ComponentName(this,
 				  SearchActivity.class)));
-//		searchItem.expandActionView();
-//		searchView.setQuery("aaaa", false);
 
 		if (!TextUtils.isEmpty(currentQuery)) {
 			searchItem.expandActionView();
 			searchView.setQuery(currentQuery, false);
-			searchView.clearFocus();
+//			searchView.clearFocus();
 		}
 
-//		searchView.setIconifiedByDefault(false);
+		searchView.setIconifiedByDefault(false);
 
 		return (true);
 	}
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will automatically handle clicks on the
-		// Home/Up button, so long as you specify a parent activity in AndroidManifest.xml.
-//		int id = item.getItemId();
-
-//		if (id == R.id.menu_search) {
-//
-//		}
-
-		return (super.onOptionsItemSelected(item));
-	}
-
 	public void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
+
 		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
 			String query = intent.getStringExtra(SearchManager.QUERY);
 			Toast.makeText(this, "Searching by: " + query, Toast.LENGTH_SHORT).show();

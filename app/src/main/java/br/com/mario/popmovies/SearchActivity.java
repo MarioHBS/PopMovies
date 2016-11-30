@@ -80,20 +80,6 @@ public class SearchActivity extends AppCompatActivity {
 	}
 
 	@Override
-	protected void onRestoreInstanceState(Bundle savedInstanceState) {
-		super.onRestoreInstanceState(savedInstanceState);
-
-//		if (savedInstanceState == null)
-//			new SearchMovie().execute(mQuery);
-//		else {
-//			mProgress.setVisibility(View.GONE);
-//			Parcelable savedRecyclerLayoutState = savedInstanceState.getParcelable
-//					  (BUNDLE_RECYCLER_LAYOUT);
-//			mRecyclerView.getLayoutManager().onRestoreInstanceState(savedRecyclerLayoutState);
-//		}
-	}
-
-	@Override
 	protected void onResume() {
 		super.onResume();
 	}
@@ -211,7 +197,7 @@ public class SearchActivity extends AppCompatActivity {
 				final String PAGE = "page";
 				final String APPID_PARAM = "api_key";
 
-				// http://api.themoviedb.org/3/movie/popular?api_key=080ed140011f67b8a97c64028cb587b4
+				// http://api.themoviedb.org/3/movie/popular?api_key=
 
 				Uri builtUri = Uri.parse(BASE_URL).buildUpon().appendQueryParameter(PAGE, String
 						  .valueOf(page)).appendQueryParameter(QUERY, params[0]).appendQueryParameter
@@ -275,7 +261,6 @@ public class SearchActivity extends AppCompatActivity {
 			if (movies != null) {
 				mAdapter.setMovies(page++, Arrays.asList(movies));
 
-				//				mRecyclerView.setVisibility(View.VISIBLE);
 				mProgress.setVisibility(View.GONE);
 			}
 		}

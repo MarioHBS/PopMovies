@@ -6,7 +6,11 @@ import android.net.NetworkInfo;
 
 import java.io.IOException;
 
-/** Created by MarioH on 19/11/2016. */
+/**
+ * Classe utilitária para verificação da rede
+ *
+ * Created by MarioH on 19/11/2016.
+ */
 public class Utilities {
 	public static boolean isNetworkActivated(Context ctx) {
 		ConnectivityManager cm = (ConnectivityManager) ctx.getSystemService(Context

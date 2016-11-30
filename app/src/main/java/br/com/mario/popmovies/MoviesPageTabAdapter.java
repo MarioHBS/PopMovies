@@ -8,10 +8,10 @@ import java.util.List;
 import java.util.Vector;
 
 /** Created by MarioH on 08/11/2016. */
-class PageTabAdapter extends FragmentStatePagerAdapter {
+class MoviesPageTabAdapter extends FragmentStatePagerAdapter {
 	private final List<Fragment> mFrags;
 
-	PageTabAdapter(FragmentManager fm, Vector<Fragment> fragments) {
+	MoviesPageTabAdapter(FragmentManager fm, Vector<Fragment> fragments) {
 		super(fm);
 
 		this.mFrags = fragments;

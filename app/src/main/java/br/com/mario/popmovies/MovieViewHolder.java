@@ -18,13 +18,13 @@ import butterknife.ButterKnife;
 class MovieViewHolder extends RecyclerView.ViewHolder {
 	@Nullable
 	@BindView(R.id.ivPoster)
-	protected ImageView posterIv;
+	ImageView posterIv;
 	@BindView(R.id.tvPosition)
-	protected TextView positionTv;
-	@BindView(R.id.tvRelease)
-	protected TextView releaseTv;
+	TextView positionTv;
+//	@BindView(R.id.tvRelease)
+//	protected TextView releaseTv;
 	@BindView(R.id.tvRating)
-	protected TextView ratingTv;
+	TextView ratingTv;
 
 	MovieViewHolder(View itemView) {
 		super(itemView);
@@ -37,13 +37,11 @@ class MovieViewHolder extends RecyclerView.ViewHolder {
 			posterIv.setImageBitmap(movie.getPoster());
 
 		positionTv.setText(position + 1 + "º");
-		releaseTv.setText(movie.getReleaseDate());
 		ratingTv.setText(String.format(Locale.getDefault(), "%.1f", movie.getAverage()));
 
 		// compatibilidade para versões 15 ou menores
 		if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) { // 15
 			positionTv.setTypeface(Typeface.create("sans-serif-light", Typeface.NORMAL));
-			releaseTv.setTypeface(Typeface.create("sans-serif-light", Typeface.NORMAL));
 			ratingTv.setTypeface(Typeface.create("sans-serif-light", Typeface.NORMAL));
 		}
 

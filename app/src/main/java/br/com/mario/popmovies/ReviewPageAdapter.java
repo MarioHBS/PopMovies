@@ -48,9 +48,4 @@ public class ReviewPageAdapter extends FragmentStatePagerAdapter {
 	public CharSequence getPageTitle(int position) {
 		return (String.valueOf(position + 1));
 	}
-
-	public void setFragmentReviews(ArrayList<Fragment> itens) {
-		this.reviewFragList.addAll(itens);
-		notifyDataSetChanged();
-	}
 }

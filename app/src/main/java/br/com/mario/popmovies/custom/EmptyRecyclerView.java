@@ -6,7 +6,11 @@ import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
 
-/** Created by MarioH on 19/11/2016. */
+/**
+ * Classe para que o RecyclerView possa receber uma view para indicar que está vazia
+ *
+ * Created by MarioH on 19/11/2016.
+ */
 public class EmptyRecyclerView extends RecyclerView {
 	@Nullable private View emptyView;
 

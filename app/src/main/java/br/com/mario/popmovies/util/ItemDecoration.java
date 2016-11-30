@@ -29,6 +29,7 @@ public class ItemDecoration extends RecyclerView.ItemDecoration {
 		} else {
 			outRect.top = mSizeGridSpacingPx;
 		}
+
 		if (itemPosition % mGridSize == 0) {
 			outRect.left = 0;
 			outRect.right = padding;
@@ -54,6 +55,7 @@ public class ItemDecoration extends RecyclerView.ItemDecoration {
 			outRect.left = mSizeGridSpacingPx / 2;
 			outRect.right = mSizeGridSpacingPx / 2;
 		}
+
 		outRect.bottom = 0;
 	}
 }

@@ -53,10 +53,6 @@ public class Movies implements Parcelable {
 		return average;
 	}
 
-	public String getPosterUrl() {
-		return (posterUrl);
-	}
-
 	public String getReleaseDate() {
 		return releaseDate;
 	}

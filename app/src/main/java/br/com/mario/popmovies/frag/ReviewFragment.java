@@ -19,13 +19,13 @@ import butterknife.ButterKnife;
  * create an instance of this fragment.
  */
 public class ReviewFragment extends Fragment {
-	// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+	/** the fragment parameters to the Review */
 	private static final String ARG_REVIEW = "review";
 
 	@BindView(R.id.review_text)
 	protected TextView reviewTv;
 
-	private String mReview;
+	private String mReview; // the properly review
 
 	public ReviewFragment() {
 		// Required empty public constructor

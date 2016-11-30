@@ -39,6 +39,7 @@ import static br.com.mario.popmovies.util.GlobalConstants.SYNOPSIS_KEY;
 import static br.com.mario.popmovies.util.GlobalConstants.VOTE_KEY;
 import static br.com.mario.popmovies.util.MoviesDataParser.getReviewsDataFromJson;
 
+/** Classe para exibir os detalhes de um filme selecionado */
 public class DetailActivity extends AppCompatActivity {
 	private static final String TMDB_POSTER_BASE_URL = "http://image.tmdb.org/t/p/";
 	private static final String TMDB_REVIEWS_BASE_URL = "https://api.themoviedb.org/3/movie";
@@ -46,14 +47,8 @@ public class DetailActivity extends AppCompatActivity {
 
 	private ReviewPageAdapter mAdapter;
 
-//	@BindView(R.id.tv_reviews_counter)
-//	protected TextView reviewCounterTv;
 	@BindView(R.id.pager_review)
 	protected CustomPager mReviewPager;
-//	@BindView(R.id.left_nav)
-//	protected ImageButton leftNav;
-//	@BindView(R.id.right_nav)
-//	protected ImageButton rightNav;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -66,22 +61,11 @@ public class DetailActivity extends AppCompatActivity {
 
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+		// ajuste do tamanho da CoordinatorLayout expandida para 3/5 da altura da tela
 		AppBarLayout appbar = (AppBarLayout) findViewById(R.id.app_bar);
 		float heightDp = getResources().getDisplayMetrics().heightPixels / 5;
 		CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams) appbar.getLayoutParams();
-		lp.height = 3 * (int) heightDp;
-
-		//		imageView.setImageBitmap(BitmapFactory.decodeByteArray(mPosterImageInByte, 0,
-		// mPosterImageInByte.length));
-
-//		FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//		fab.setOnClickListener(new View.OnClickListener() {
-//			@Override
-//			public void onClick(View view) {
-//				Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction
-//						  ("Action", null).show();
-//			}
-//		});
+		lp.height = (3 * (int) heightDp);
 	}
 
 	@Override
@@ -101,18 +85,20 @@ public class DetailActivity extends AppCompatActivity {
 		double voteDbl = it.getDoubleExtra(VOTE_KEY, 0);
 		String synopsisTxt = it.getStringExtra(SYNOPSIS_KEY);
 
+		// URI para recuperar a imagem de pôster
 		Uri backdropUri = Uri.parse(TMDB_POSTER_BASE_URL).buildUpon()
 				  .appendPath(SIZE)
 				  .appendEncodedPath(backExtraUrl)
 				  .build();
 
+		// URI para recuperar os reviews de um filme
 		Uri reviewUri = Uri.parse(TMDB_REVIEWS_BASE_URL).buildUpon()
 				  .appendPath(String.valueOf(movieID))
 				  .appendPath("reviews")
 				  .appendQueryParameter(APPID_PARAM, BuildConfig.TMDB_API_KEY)
 				  .build();
 
-		// atribuição dos valores:
+		// atribuição dos valores aos componentes:
 		Glide.with(DetailActivity.this).load(backdropUri).into(imageView);
 		getSupportActionBar().setTitle(it.getStringExtra(GlobalConstants.MOVIE_TITLE_KEY));
 		releaseTv.setText(releaseDateStr);
@@ -133,36 +119,6 @@ public class DetailActivity extends AppCompatActivity {
 
 		mAdapter = new ReviewPageAdapter(getSupportFragmentManager(), fragList);
 		mReviewPager.setAdapter(mAdapter);
-
-		/*int tam = strings.size();
-
-		if (tam == 0){
-			leftNav.setVisibility(View.GONE);
-			rightNav.setVisibility(View.GONE);
-		} else {
-			leftNav.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					int tab = mReviewPager.getCurrentItem();
-					if (tab > 0) {
-						tab--;
-						mReviewPager.setCurrentItem(tab);
-					} else if (tab == 0) {
-						mReviewPager.setCurrentItem(tab);
-					}
-				}
-			});
-
-			// Images right navigatin
-			rightNav.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					int tab = mReviewPager.getCurrentItem();
-					tab++;
-					mReviewPager.setCurrentItem(tab);
-				}
-			});
-		}*/
 	}
 
 	private class ReviewAsync extends AsyncTask<Uri, Void, ArrayList<String>> {
@@ -192,7 +148,6 @@ public class DetailActivity extends AppCompatActivity {
 				// Read the input stream into a String
 				InputStream inputStream = urlConnection.getInputStream();
 				if (inputStream == null)
-					// Nothing to do.
 					return null;
 
 				reader = new BufferedReader(new InputStreamReader(inputStream));
@@ -206,8 +161,7 @@ public class DetailActivity extends AppCompatActivity {
 					buffer.append(line).append("\n");
 				}
 
-				if (buffer.length() == 0)
-					// Stream was empty.  No point in parsing.
+				if (buffer.length() == 0) // Stream was empty.  No point in parsing.
 					return (null);
 
 				reviewJsonStr = buffer.toString();
@@ -224,16 +178,8 @@ public class DetailActivity extends AppCompatActivity {
 		} // end of doInBackground
 		@Override
 		protected void onPostExecute(ArrayList<String> strings) {
-			if (strings != null) {
-//				if (strings.isEmpty())
-//					reviewCounterTv.setText("0");
-//				else {
-					String str = "(" + 1 + "/" + strings.size() + ")";
-//					reviewCounterTv.setText(str);
-
-					setReviewComponents(strings);
-//				}
-			}
+			if (strings != null)
+				setReviewComponents(strings);
 		}
 	} // end of ReviewAsync
 }

@@ -1,6 +1,5 @@
 package br.com.mario.popmovies.frag;
 
-import android.app.Activity;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -44,8 +43,8 @@ import static br.com.mario.popmovies.util.GlobalConstants.APPID_PARAM;
 
 /** Created by MarioH on 08/11/2016. */
 public class TabFragment extends Fragment {
-	private static final String TAG = TabFragment.class.getSimpleName();
 	private static final String BUNDLE_RECYCLER_LAYOUT = "classname.recycler.layout";
+	private static final int visibleThreshold = 4;
 
 	/** número de colunas do Grid */
 	private final int SPAN_COUNT = 3;
@@ -63,7 +62,7 @@ public class TabFragment extends Fragment {
 	private int firstVisibleItem, visibleItemCount, totalItemCount;
 	private int page = 1, pageCount = 1;
 	private int previousTotal = 0;
-	private int visibleThreshold = 4;
+
 	private boolean loading = true;
 	private String mType;
 
@@ -90,9 +89,8 @@ public class TabFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable
 			  Bundle savedInstanceState) {
-		if (container == null) {
+		if (container == null)
 			return (null);
-		}
 
 		View view = inflater.inflate(R.layout.tab_frag_page, container, false);
 		ButterKnife.bind(this, view);
@@ -124,7 +122,7 @@ public class TabFragment extends Fragment {
 		super.onViewCreated(view, savedInstanceState);
 
 		if (savedInstanceState == null) {
-//			if (Utilities.isOnline())
+			if (Utilities.isOnline())
 				new GetMovies().execute(mType);
 		}
 		else {
@@ -154,7 +152,6 @@ public class TabFragment extends Fragment {
 
 		mRecyclerView.addItemDecoration(new ItemDecoration(10, SPAN_COUNT));
 		mRecyclerView.setAdapter(mAdapter);
-		//		mRecyclerView.setVisibility(View.GONE); // necessário? já que a lista inicia vazia
 
 		mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
 			@Override
@@ -177,17 +174,6 @@ public class TabFragment extends Fragment {
 		});
 	}
 
-	/**
-	 * Called when the Fragment is visible to the user.  This is generally
-	 * tied to {@link Activity#onStart() Activity.onStart} of the containing
-	 * Activity's lifecycle.
-	 */
-	@Override
-	public void onStart() {
-		super.onStart();
-		//		loadMovieList();
-	}
-
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
@@ -205,18 +191,18 @@ public class TabFragment extends Fragment {
 		}
 		if (pageCount < PAGE_LIMIT && !loading && ((totalItemCount - visibleItemCount) <=
 				  (firstVisibleItem + visibleThreshold))) {
-			// End has been reached
+			// Final da lista foi alcançado
 
 			Log.i("Yaeye!", "end called");
 
-//			if (Utilities.isOnline()) {
+			if (Utilities.isOnline()) {
 				pageCount++;
 				mProgress.setVisibility(View.VISIBLE);
 				new GetMovies().execute(mType);
 
 				loading = true;
-//			} else
-//				Toast.makeText(getActivity(), "Não há conexão", Toast.LENGTH_SHORT).show();
+			} else
+				Toast.makeText(getActivity(), "Não há conexão", Toast.LENGTH_SHORT).show();
 		}
 	}
 
@@ -241,8 +227,6 @@ public class TabFragment extends Fragment {
 				final String TYPE_PATH = params[0]; // dado recuperado das preferências
 				final String PAGE = "page";
 
-				// http://api.themoviedb.org/3/movie/popular?api_key=080ed140011f67b8a97c64028cb587b4
-
 				Uri builtUri = Uri.parse(BASE_URL).buildUpon()
 						  .appendPath(TYPE_PATH)
 						  .appendQueryParameter(PAGE, String.valueOf(page))
@@ -251,7 +235,7 @@ public class TabFragment extends Fragment {
 
 				URL url = new URL(builtUri.toString());
 
-				// Create the request to OpenWeatherMap, and open the connection
+				// Create the request to MovieDB, and open the connection
 				urlConnection = (HttpURLConnection) url.openConnection();
 				urlConnection.setRequestMethod("GET");
 				urlConnection.setConnectTimeout(GlobalConstants.CONNECTION_TIME_LIMIT);
@@ -261,8 +245,7 @@ public class TabFragment extends Fragment {
 				// Read the input stream into a String
 				InputStream inputStream = urlConnection.getInputStream();
 				if (inputStream == null)
-					// Nothing to do.
-					return null;
+					return (null);
 
 				reader = new BufferedReader(new InputStreamReader(inputStream));
 
@@ -275,8 +258,7 @@ public class TabFragment extends Fragment {
 					buffer.append(line).append("\n");
 				}
 
-				if (buffer.length() == 0)
-					// Stream was empty.  No point in parsing.
+				if (buffer.length() == 0) // Stream was empty.  No point in parsing.
 					return (null);
 
 				tmdbJsonStr = buffer.toString();
