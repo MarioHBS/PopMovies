@@ -3,7 +3,7 @@
 	<string name="setting">Settings</string>
 	<string name="desc_position">Movie\'s position</string>
 	<string name="search_hint">Search the movie</string>
-	<string name="empty_list" translatable="false">Empty List</string>
+	<string name="empty_list">Empty List</string>
 	<string name="tab1_name">POPULAR</string>
 	<string name="tab2_name">TOP RATED</string>
 	<string name="rating">Rating</string>

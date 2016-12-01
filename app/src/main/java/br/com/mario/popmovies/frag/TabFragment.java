@@ -44,12 +44,12 @@ import static br.com.mario.popmovies.util.GlobalConstants.APPID_PARAM;
 /** Created by MarioH on 08/11/2016. */
 public class TabFragment extends Fragment {
 	private static final String BUNDLE_RECYCLER_LAYOUT = "classname.recycler.layout";
+	/** limite do número de páginas carregadas */
+	private static final int PAGE_LIMIT = 3;
 	private static final int visibleThreshold = 4;
 
-	/** número de colunas do Grid */
+	/** número de colunas do grid */
 	private final int SPAN_COUNT = 3;
-	/** limite do número de páginas carregadas */
-	private final int PAGE_LIMIT = 3;
 
 	@BindView(R.id.progress)
 	protected ProgressBar mProgress;
