@@ -1,5 +1,6 @@
 package br.com.mario.popmovies.frag;
 
+import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -12,8 +13,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -29,15 +28,13 @@ import java.util.Arrays;
 
 import br.com.mario.popmovies.BuildConfig;
 import br.com.mario.popmovies.R;
-import br.com.mario.popmovies.RecyclerAdapter;
-import br.com.mario.popmovies.custom.EmptyRecyclerView;
+import br.com.mario.popmovies.adapter.MovieRecyclerAdapter;
 import br.com.mario.popmovies.data.Movies;
+import br.com.mario.popmovies.databinding.TabFragPageBinding;
 import br.com.mario.popmovies.util.GlobalConstants;
 import br.com.mario.popmovies.util.ItemDecoration;
 import br.com.mario.popmovies.util.MoviesDataParser;
 import br.com.mario.popmovies.util.Utilities;
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 import static br.com.mario.popmovies.util.GlobalConstants.APPID_PARAM;
 
@@ -51,13 +48,10 @@ public class TabFragment extends Fragment {
 	/** número de colunas do grid */
 	private final int SPAN_COUNT = 3;
 
-	@BindView(R.id.progress)
-	protected ProgressBar mProgress;
-	@BindView(R.id.list_grid_movies)
-	protected EmptyRecyclerView mRecyclerView;
-
-	private RecyclerAdapter mAdapter;
+	private MovieRecyclerAdapter mAdapter;
 	private GridLayoutManager mLayoutManager;
+
+	private TabFragPageBinding binding;
 
 	private int firstVisibleItem, visibleItemCount, totalItemCount;
 	private int page = 1, pageCount = 1;
@@ -82,7 +76,7 @@ public class TabFragment extends Fragment {
 
 		mType = getArguments().getString("movietype");
 
-		mAdapter = RecyclerAdapter.getInstance();
+		mAdapter = MovieRecyclerAdapter.getInstance();
 	}
 
 	@Nullable
@@ -92,18 +86,16 @@ public class TabFragment extends Fragment {
 		if (container == null)
 			return (null);
 
-		View view = inflater.inflate(R.layout.tab_frag_page, container, false);
-		ButterKnife.bind(this, view);
+		binding = DataBindingUtil.inflate(inflater, R.layout.tab_frag_page, container, false);
 
 		mLayoutManager = new GridLayoutManager(getContext(), SPAN_COUNT);
-		mRecyclerView.setLayoutManager(mLayoutManager);
+		binding.listGridMovies.setLayoutManager(mLayoutManager);
 
-		TextView emptyTv = ButterKnife.findById(view, R.id.empty);
-		mRecyclerView.setEmptyView(emptyTv);
+		binding.listGridMovies.setEmptyView(binding.emptyTv);
 
 		setRetainInstance(true);
 
-		return (view);
+		return (binding.getRoot());
 	}
 
 	/**
@@ -126,10 +118,10 @@ public class TabFragment extends Fragment {
 				new GetMovies().execute(mType);
 		}
 		else {
-			mProgress.setVisibility(View.GONE);
+			binding.progressSearch.setVisibility(View.GONE);
 			Parcelable savedRecyclerLayoutState = savedInstanceState.getParcelable
 					  (BUNDLE_RECYCLER_LAYOUT);
-			mRecyclerView.getLayoutManager().onRestoreInstanceState(savedRecyclerLayoutState);
+			binding.listGridMovies.getLayoutManager().onRestoreInstanceState(savedRecyclerLayoutState);
 		}
 	}
 
@@ -150,10 +142,10 @@ public class TabFragment extends Fragment {
 	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-		mRecyclerView.addItemDecoration(new ItemDecoration(10, SPAN_COUNT));
-		mRecyclerView.setAdapter(mAdapter);
+		binding.listGridMovies.addItemDecoration(new ItemDecoration(10, SPAN_COUNT));
+		binding.listGridMovies.setAdapter(mAdapter);
 
-		mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+		binding.listGridMovies.addOnScrollListener(new RecyclerView.OnScrollListener() {
 			@Override
 			public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
 				super.onScrollStateChanged(recyclerView, newState);
@@ -164,7 +156,7 @@ public class TabFragment extends Fragment {
 				super.onScrolled(recyclerView, dx, dy);
 
 				if (dy > 0) {
-					visibleItemCount = mRecyclerView.getChildCount();
+					visibleItemCount = binding.listGridMovies.getChildCount();
 					totalItemCount = mLayoutManager.getItemCount();
 					firstVisibleItem = mLayoutManager.findFirstVisibleItemPosition();
 
@@ -197,7 +189,7 @@ public class TabFragment extends Fragment {
 
 			if (Utilities.isOnline()) {
 				pageCount++;
-				mProgress.setVisibility(View.VISIBLE);
+				binding.progressSearch.setVisibility(View.VISIBLE);
 				new GetMovies().execute(mType);
 
 				loading = true;
@@ -295,8 +287,8 @@ public class TabFragment extends Fragment {
 			if (movies != null) {
 				mAdapter.setMovies(page++, Arrays.asList(movies));
 
-				mRecyclerView.setVisibility(View.VISIBLE);
-				mProgress.setVisibility(View.GONE);
+				binding.listGridMovies.setVisibility(View.VISIBLE);
+				binding.progressSearch.setVisibility(View.GONE);
 			}
 		}
 	}

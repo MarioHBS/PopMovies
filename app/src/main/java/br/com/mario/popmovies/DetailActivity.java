@@ -1,6 +1,7 @@
 package br.com.mario.popmovies;
 
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -8,10 +9,8 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
@@ -25,11 +24,10 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
-import br.com.mario.popmovies.custom.CustomPager;
+import br.com.mario.popmovies.adapter.ReviewPageAdapter;
+import br.com.mario.popmovies.databinding.ActivityDetailBinding;
 import br.com.mario.popmovies.frag.ReviewFragment;
 import br.com.mario.popmovies.util.GlobalConstants;
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 import static br.com.mario.popmovies.util.GlobalConstants.APPID_PARAM;
 import static br.com.mario.popmovies.util.GlobalConstants.BACKDROP_KEY;
@@ -45,21 +43,19 @@ public class DetailActivity extends AppCompatActivity {
 	private static final String TMDB_REVIEWS_BASE_URL = "https://api.themoviedb.org/3/movie";
 	private static final String SIZE = "w500"; // w92, w154, w185, w342, w500, w780, or original
 
-	private ReviewPageAdapter mAdapter;
-
-	@BindView(R.id.pager_review)
-	protected CustomPager mReviewPager;
+	private ActivityDetailBinding binding;
+	private ActionBar supportActionBar;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_detail);
-		ButterKnife.bind(this);
+		binding = DataBindingUtil.setContentView(this, R.layout.activity_detail);
 
-		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-		setSupportActionBar(toolbar);
+		setSupportActionBar(binding.toolbar);
+		supportActionBar = getSupportActionBar();
 
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		if (supportActionBar != null)
+			supportActionBar.setDisplayHomeAsUpEnabled(true);
 
 		// ajuste do tamanho da CoordinatorLayout expandida para 3/5 da altura da tela
 		AppBarLayout appbar = (AppBarLayout) findViewById(R.id.app_bar);
@@ -71,11 +67,6 @@ public class DetailActivity extends AppCompatActivity {
 	@Override
 	protected void onPostCreate(@Nullable Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
-
-		ImageView imageView = ButterKnife.findById(this, R.id.image);
-		TextView releaseTv = ButterKnife.findById(this, R.id.tv_release_date);
-		TextView averageTv = ButterKnife.findById(this, R.id.tv_rating);
-		TextView synopsisTv = ButterKnife.findById(this, R.id.tv_synopsis);
 
 		final Intent it = getIntent();
 
@@ -99,11 +90,11 @@ public class DetailActivity extends AppCompatActivity {
 				  .build();
 
 		// atribuição dos valores aos componentes:
-		Glide.with(DetailActivity.this).load(backdropUri).into(imageView);
-		getSupportActionBar().setTitle(it.getStringExtra(GlobalConstants.MOVIE_TITLE_KEY));
-		releaseTv.setText(releaseDateStr);
-		averageTv.setText(String.valueOf(voteDbl));
-		synopsisTv.setText(synopsisTxt);
+		Glide.with(DetailActivity.this).load(backdropUri).into(binding.backdropIv);
+		supportActionBar.setTitle(it.getStringExtra(GlobalConstants.MOVIE_TITLE_KEY));
+		binding.included.tvReleaseDate.setText(releaseDateStr);
+		binding.included.tvRating.setText(String.valueOf(voteDbl));
+		binding.included.tvSynopsis.setText(synopsisTxt);
 
 		new ReviewAsync().execute(reviewUri);
 	}
@@ -117,8 +108,8 @@ public class DetailActivity extends AppCompatActivity {
 		else
 			fragList.add(ReviewFragment.newInstance(null));
 
-		mAdapter = new ReviewPageAdapter(getSupportFragmentManager(), fragList);
-		mReviewPager.setAdapter(mAdapter);
+		ReviewPageAdapter mAdapter = new ReviewPageAdapter(getSupportFragmentManager(), fragList);
+		binding.included.mReviewPager.setAdapter(mAdapter);
 	}
 
 	private class ReviewAsync extends AsyncTask<Uri, Void, ArrayList<String>> {

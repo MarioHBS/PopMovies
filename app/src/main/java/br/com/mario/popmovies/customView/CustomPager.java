@@ -1,4 +1,4 @@
-package br.com.mario.popmovies.custom;
+package br.com.mario.popmovies.customView;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -8,7 +8,7 @@ import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.View;
 
-import br.com.mario.popmovies.ReviewPageAdapter;
+import br.com.mario.popmovies.adapter.ReviewPageAdapter;
 
 /**
  * Created by vihaan on 1/9/15.

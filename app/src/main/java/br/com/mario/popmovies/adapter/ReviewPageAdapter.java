@@ -1,4 +1,4 @@
-package br.com.mario.popmovies;
+package br.com.mario.popmovies.adapter;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 
 import java.util.ArrayList;
 
-import br.com.mario.popmovies.custom.CustomPager;
+import br.com.mario.popmovies.customView.CustomPager;
 
 /** Created by MarioH on 21/11/2016. */
 public class ReviewPageAdapter extends FragmentStatePagerAdapter {

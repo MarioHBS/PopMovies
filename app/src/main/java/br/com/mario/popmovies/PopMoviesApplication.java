@@ -19,7 +19,7 @@ import static br.com.mario.popmovies.util.GlobalConstants.VOTE_KEY;
 
 /** Created by MarioH on 09/11/2016. */
 public class PopMoviesApplication extends Application {
-	protected static Context CTX;
+	public static Context CTX;
 	private static PopMoviesApplication instance;
 
 	public static PopMoviesApplication getInstance() {

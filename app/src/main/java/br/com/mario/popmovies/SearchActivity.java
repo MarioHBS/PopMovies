@@ -2,6 +2,7 @@ package br.com.mario.popmovies;
 
 import android.app.SearchManager;
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -12,8 +13,6 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import org.json.JSONException;
 
@@ -26,33 +25,30 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import br.com.mario.popmovies.custom.EmptyRecyclerView;
+import br.com.mario.popmovies.adapter.MovieRecyclerAdapter;
 import br.com.mario.popmovies.data.Movies;
+import br.com.mario.popmovies.databinding.TabFragPageBinding;
 import br.com.mario.popmovies.util.ItemDecoration;
 import br.com.mario.popmovies.util.MoviesDataParser;
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 public class SearchActivity extends AppCompatActivity {
 	private static final String TAG = SearchActivity.class.getSimpleName();
 	private static final String BUNDLE_RECYCLER_LAYOUT = "recycler_state";
+	/** limite do número de páginas carregadas */
+	private static final int PAGE_LIMIT = 3;
+	private static final int visibleThreshold = 4;
 
 	/** número de colunas do Grid */
 	private final int SPAN_COUNT = 2;
-	/** limite do número de páginas carregadas */
-	private final int PAGE_LIMIT = 3;
 	private final String key = "array-movie";
 
-	@BindView(R.id.list_grid_movies)
-	protected EmptyRecyclerView mRecyclerView;
-	@BindView(R.id.progress)
-	protected ProgressBar mProgress;
-
-	private RecyclerAdapter mAdapter;
+	private MovieRecyclerAdapter mAdapter;
 	private GridLayoutManager mLayoutManager;
 
+	private TabFragPageBinding binding;
+
 	private int firstVisibleItem, visibleItemCount, totalItemCount;
-	private int previousTotal = 0, visibleThreshold = 4;
+	private int previousTotal = 0;
 	private int page = 1, pageCount = 1;
 	private boolean loading = true;
 	private String mQuery;
@@ -60,28 +56,21 @@ public class SearchActivity extends AppCompatActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.tab_frag_page);
-		ButterKnife.bind(this);
+		binding = DataBindingUtil.setContentView(this, R.layout.tab_frag_page);
 
-		mAdapter = RecyclerAdapter.getInstance();
+		mAdapter = MovieRecyclerAdapter.getInstance();
 		if (savedInstanceState != null) {
 			ArrayList<Movies> list = savedInstanceState.getParcelableArrayList(key);
 			mAdapter.setMovies(1, list);
 		}
 		mLayoutManager = new GridLayoutManager(SearchActivity.this, SPAN_COUNT);
-		mRecyclerView.setLayoutManager(mLayoutManager);
+		binding.listGridMovies.setLayoutManager(mLayoutManager);
 
-		TextView emptyTv = ButterKnife.findById(this, R.id.empty);
-		mRecyclerView.setEmptyView(emptyTv);
+		binding.listGridMovies.setEmptyView(binding.emptyTv);
 
 		// Get the intent, verify the action and get the query
 		Intent intent = getIntent();
 		handleIntent(intent);
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
 	}
 
 	@Override
@@ -91,16 +80,16 @@ public class SearchActivity extends AppCompatActivity {
 		if (savedInstanceState == null)
 			new SearchMovie().execute(mQuery);
 		else {
-			mProgress.setVisibility(View.GONE);
+			binding.progressSearch.setVisibility(View.GONE);
 			Parcelable savedRecyclerLayoutState = savedInstanceState.getParcelable
 					  (BUNDLE_RECYCLER_LAYOUT);
-			mRecyclerView.getLayoutManager().onRestoreInstanceState(savedRecyclerLayoutState);
+			binding.listGridMovies.getLayoutManager().onRestoreInstanceState(savedRecyclerLayoutState);
 		}
 
-		mRecyclerView.addItemDecoration(new ItemDecoration(10, SPAN_COUNT));
-		mRecyclerView.setAdapter(mAdapter);
+		binding.listGridMovies.addItemDecoration(new ItemDecoration(10, SPAN_COUNT));
+		binding.listGridMovies.setAdapter(mAdapter);
 
-		mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+		binding.listGridMovies.addOnScrollListener(new RecyclerView.OnScrollListener() {
 			@Override
 			public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
 				super.onScrollStateChanged(recyclerView, newState);
@@ -111,7 +100,7 @@ public class SearchActivity extends AppCompatActivity {
 				super.onScrolled(recyclerView, dx, dy);
 
 				if (dy > 0) {
-					visibleItemCount = mRecyclerView.getChildCount();
+					visibleItemCount = binding.listGridMovies.getChildCount();
 					totalItemCount = mLayoutManager.getItemCount();
 					firstVisibleItem = mLayoutManager.findFirstVisibleItemPosition();
 
@@ -150,7 +139,7 @@ public class SearchActivity extends AppCompatActivity {
 			Log.i("Yaeye!", "end called");
 
 			pageCount++;
-			mProgress.setVisibility(View.VISIBLE);
+			binding.progressSearch.setVisibility(View.VISIBLE);
 			new SearchMovie().execute(mQuery);
 
 			loading = true;
@@ -166,7 +155,7 @@ public class SearchActivity extends AppCompatActivity {
 			getSupportActionBar().setTitle(query);
 
 			mQuery = query;
-//			loadMovieList();
+			//			loadMovieList();
 
 		} else if (Intent.ACTION_VIEW.equals(intent.getAction())) {
 			String uri = intent.getDataString();
@@ -261,7 +250,7 @@ public class SearchActivity extends AppCompatActivity {
 			if (movies != null) {
 				mAdapter.setMovies(page++, Arrays.asList(movies));
 
-				mProgress.setVisibility(View.GONE);
+				binding.progressSearch.setVisibility(View.GONE);
 			}
 		}
 	}

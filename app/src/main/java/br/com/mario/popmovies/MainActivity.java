@@ -4,11 +4,11 @@ import android.app.SearchManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
-import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
@@ -19,15 +19,12 @@ import android.widget.Toast;
 
 import com.ToxicBakery.viewpager.transforms.StackTransformer;
 
-import java.util.Vector;
-
-import br.com.mario.popmovies.frag.TabFragment;
+import br.com.mario.popmovies.adapter.MoviePageAdapter;
+import br.com.mario.popmovies.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
 	private static final String TAG = MainActivity.class.getSimpleName();
 	private static final String KEY_SEARCH_QUERY = "searchQuery";
-
-	private Vector<Fragment> fragments;
 
 	private String currentQuery;
 	private SearchView searchView;
@@ -35,28 +32,28 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
+		ActivityMainBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
-		getSupportActionBar().setDisplayShowHomeEnabled(true);
-		getSupportActionBar().setLogo(R.drawable.film_reel);
-		getSupportActionBar().setDisplayUseLogoEnabled(true);
+		{
+			final ActionBar actionBar;
+			if ((actionBar = getSupportActionBar()) != null) {
+				actionBar.setDisplayShowHomeEnabled(true);
+				actionBar.setLogo(R.drawable.film_reel);
+				actionBar.setDisplayUseLogoEnabled(true);
+			}
+		}
 
 		// configuração de política de Thread
 		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 		StrictMode.setThreadPolicy(policy);
 
-		fragments = new Vector<>();
-		fragments.add(TabFragment.newInstance("popular"));
-		fragments.add(TabFragment.newInstance("top_rated"));
+		MoviePageAdapter mPageAdapter = new MoviePageAdapter(getSupportFragmentManager());
 
-		MoviesPageTabAdapter mPageAdapter = new MoviesPageTabAdapter(getSupportFragmentManager(), fragments);
+		//	binding.viewPager.setOffscreenPageLimit(2); // offscreen pages to preload
+		//	SpringIndicator indicator = (SpringIndicator) findViewById(R.id.indicator);
 
-		ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
-		//		viewPager.setOffscreenPageLimit(2); // páginas vizinhas a serem carregadas previamente
-		//		SpringIndicator indicator = (SpringIndicator) findViewById(R.id.indicator);
-
-		viewPager.setAdapter(mPageAdapter);
-		viewPager.setPageTransformer(true, new StackTransformer());
+		binding.viewPager.setAdapter(mPageAdapter);
+		binding.viewPager.setPageTransformer(true, new StackTransformer());
 	}
 
 	@Override
@@ -64,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 		if (searchView != null)
 			outState.putString(KEY_SEARCH_QUERY, searchView.getQuery().toString());
 
-//		Log.i("FragLife", "Activity: onSaveInstanceState: " + outState);
+		//		Log.i("FragLife", "Activity: onSaveInstanceState: " + outState);
 		super.onSaveInstanceState(outState);
 	}
 
@@ -72,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 	protected void onRestoreInstanceState(Bundle savedInstanceState) {
 		super.onRestoreInstanceState(savedInstanceState);
 
-//		Log.i("FragLife", "Activity: onCreate: " + savedInstanceState);
+		//		Log.i("FragLife", "Activity: onCreate: " + savedInstanceState);
 		if (savedInstanceState != null)
 			currentQuery = savedInstanceState.getString(KEY_SEARCH_QUERY);
 	}
@@ -91,8 +88,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
 		if (!TextUtils.isEmpty(currentQuery)) {
 			searchItem.expandActionView();
-			searchView.setQuery(currentQuery, false);
-//			searchView.clearFocus();
+			searchView.setQuery(currentQuery, false); // keyboard collapse: // searchView.clearFocus();
 		}
 
 		searchView.setIconifiedByDefault(false);
@@ -139,7 +135,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 	 */
 	@Override
 	public boolean onQueryTextChange(String newText) {
-//		currentQuery = newText;
+		//		currentQuery = newText;
 		return (false);
 	}
 }

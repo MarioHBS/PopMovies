@@ -1,4 +1,4 @@
-package br.com.mario.popmovies.custom;
+package br.com.mario.popmovies.customView;
 
 import android.content.Context;
 import android.support.annotation.Nullable;

@@ -1,137 +1,144 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.NestedScrollView
+<layout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools"
-	android:layout_width="match_parent"
-	android:layout_height="match_parent"
-	app:layout_behavior="@string/appbar_scrolling_view_behavior"
-	tools:context="br.com.mario.popmovies.DetailActivity"
-	tools:showIn="@layout/activity_detail"
 	>
 
-	<RelativeLayout
+	<android.support.v4.widget.NestedScrollView
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
+		app:layout_behavior="@string/appbar_scrolling_view_behavior"
+		tools:context="br.com.mario.popmovies.DetailActivity"
+		tools:showIn="@layout/activity_detail"
 		>
 
-		<TextView
-			android:id="@+id/tv_release_title"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text="@string/release_date"
-			android:textSize="@dimen/text_size_medium"
-			android:textColor="@color/light_grey"
-			android:textStyle="normal|bold"
-			android:layout_marginTop="16dp"
-			android:layout_marginLeft="16dp"
-			android:layout_marginStart="16dp"
-			android:layout_alignParentLeft="true"
-			android:layout_alignParentStart="true"
-		/>
-
-		<TextView
-			android:id="@+id/tv_release_date"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text="@string/sample_text"
-			android:textColor="@color/red_title"
-			android:layout_alignLeft="@+id/tv_release_title"
-			android:layout_alignStart="@+id/tv_release_title"
-		   android:layout_below="@+id/tv_release_title"
-		/>
-
-		<TextView
-			android:id="@+id/tv_rate_title"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text="@string/rating"
-			android:textSize="@dimen/text_size_medium"
-			android:textStyle="normal|bold"
-			android:textColor="@color/light_grey"
-			android:layout_marginTop="16dp"
-			android:layout_marginLeft="16dp"
-			android:layout_marginStart="16dp"
-		   android:layout_below="@+id/tv_release_date"
-		/>
-
-		<TextView
-			android:id="@+id/tv_rating"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text="@string/sample_text"
-			android:textColor="@color/red_title"
-			android:layout_alignLeft="@+id/tv_rate_title"
-			android:layout_alignStart="@+id/tv_rate_title"
-		   android:layout_below="@+id/tv_rate_title"
-		/>
-
-		<TextView
-			android:id="@+id/tv_synopsis_title"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text="@string/synopsis"
-			android:textSize="@dimen/text_size_medium"
-			android:textStyle="normal|bold"
-			android:textColor="@color/light_grey"
-			android:layout_marginLeft="16dp"
-			android:layout_marginStart="16dp"
-			android:layout_marginTop="16dp"
-		   android:layout_below="@+id/tv_rating"
-		/>
-
-		<TextView
-			android:id="@+id/tv_synopsis"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text="@string/sample_text"
-			android:layout_marginEnd="16dp"
-			android:layout_marginRight="16dp"
-			android:layout_alignLeft="@+id/tv_synopsis_title"
-			android:layout_alignStart="@+id/tv_synopsis_title"
-			android:layout_below="@+id/tv_synopsis_title"
-		/>
-
-		<LinearLayout
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_marginTop="16dp"
-			android:layout_marginEnd="16dp"
-			android:layout_marginLeft="16dp"
-			android:layout_marginStart="16dp"
-			android:layout_marginRight="16dp"
-			android:orientation="vertical"
-			android:background="@drawable/border_background"
-			android:layout_below="@+id/tv_synopsis"
+		<RelativeLayout
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
 			>
+
 			<TextView
-				android:id="@+id/tv_comment_title"
-				android:layout_width="match_parent"
+				android:id="@+id/tv_release_title"
+				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:text="@string/reviews"
+				android:layout_alignParentLeft="true"
+				android:layout_alignParentStart="true"
+				android:layout_marginLeft="16dp"
+				android:layout_marginStart="16dp"
+				android:layout_marginTop="16dp"
+				android:text="@string/release_date"
+				android:textColor="@color/light_grey"
 				android:textSize="@dimen/text_size_medium"
 				android:textStyle="normal|bold"
-				android:textColor="@color/light_grey"
-				android:background="@drawable/border_background"
-				android:gravity="center_horizontal"
 				/>
 
-			<br.com.mario.popmovies.custom.CustomPager
-				android:id="@+id/pager_review"
+			<TextView
+				android:id="@+id/tv_release_date"
 				android:layout_width="wrap_content"
-				android:layout_height="0dp"
-				>
-				<android.support.v4.view.PagerTabStrip
-					android:id="@+id/pager_tab_strip"
-					android:layout_width="wrap_content"
-					android:layout_height="30dp"
-					android:layout_gravity="top"
-					android:paddingBottom="4dp"
-					android:paddingTop="4dp"
-					android:textColor="@color/red_title"
-					/>
-			</br.com.mario.popmovies.custom.CustomPager>
-		</LinearLayout>
-	</RelativeLayout>
+				android:layout_height="wrap_content"
+				android:layout_alignLeft="@+id/tv_release_title"
+				android:layout_alignStart="@+id/tv_release_title"
+				android:layout_below="@+id/tv_release_title"
+				android:text="@string/sample_text"
+				android:textColor="@color/red_title"
+				/>
 
-</android.support.v4.widget.NestedScrollView>
+			<TextView
+				android:id="@+id/tv_rate_title"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_below="@+id/tv_release_date"
+				android:layout_marginLeft="16dp"
+				android:layout_marginStart="16dp"
+				android:layout_marginTop="16dp"
+				android:text="@string/rating"
+				android:textColor="@color/light_grey"
+				android:textSize="@dimen/text_size_medium"
+				android:textStyle="normal|bold"
+				/>
+
+			<TextView
+				android:id="@+id/tv_rating"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_alignLeft="@+id/tv_rate_title"
+				android:layout_alignStart="@+id/tv_rate_title"
+				android:layout_below="@+id/tv_rate_title"
+				android:text="@string/sample_text"
+				android:textColor="@color/red_title"
+				/>
+
+			<TextView
+				android:id="@+id/tv_synopsis_title"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_below="@+id/tv_rating"
+				android:layout_marginLeft="16dp"
+				android:layout_marginStart="16dp"
+				android:layout_marginTop="16dp"
+				android:text="@string/synopsis"
+				android:textColor="@color/light_grey"
+				android:textSize="@dimen/text_size_medium"
+				android:textStyle="normal|bold"
+			/>
+
+			<TextView
+				android:id="@+id/tv_synopsis"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_alignLeft="@+id/tv_synopsis_title"
+				android:layout_alignStart="@+id/tv_synopsis_title"
+				android:layout_below="@+id/tv_synopsis_title"
+				android:layout_marginEnd="16dp"
+				android:layout_marginRight="16dp"
+				android:text="@string/sample_text"
+			   android:textColor="@color/dark_text"
+				/>
+
+			<LinearLayout
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_below="@+id/tv_synopsis"
+				android:layout_marginEnd="16dp"
+				android:layout_marginLeft="16dp"
+				android:layout_marginRight="16dp"
+				android:layout_marginStart="16dp"
+				android:layout_marginTop="16dp"
+				android:background="@drawable/border_background"
+				android:orientation="vertical"
+				>
+
+				<TextView
+					android:id="@+id/tv_comment_title"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:background="@drawable/border_background"
+					android:gravity="center_horizontal"
+					android:text="@string/reviews"
+					android:textColor="@color/light_grey"
+					android:textSize="@dimen/text_size_medium"
+					android:textStyle="normal|bold"
+					/>
+
+				<br.com.mario.popmovies.customView.CustomPager
+					android:id="@+id/m_review_pager"
+					android:layout_width="wrap_content"
+					android:layout_height="0dp"
+					>
+
+					<android.support.v4.view.PagerTabStrip
+						android:id="@+id/pager_tab_strip"
+						android:layout_width="wrap_content"
+						android:layout_height="30dp"
+						android:layout_gravity="top"
+						android:paddingBottom="4dp"
+						android:paddingTop="4dp"
+						android:textColor="@color/red_title"
+						/>
+				</br.com.mario.popmovies.customView.CustomPager>
+			</LinearLayout>
+		</RelativeLayout>
+
+	</android.support.v4.widget.NestedScrollView>
+</layout>
