@@ -6,8 +6,8 @@ import android.view.View;
 
 /** Created by MarioH on 07/11/2016. */
 public class ItemDecoration extends RecyclerView.ItemDecoration {
-	private int mSizeGridSpacingPx;
-	private int mGridSize;
+	private final int mSizeGridSpacingPx;
+	private final int mGridSize;
 
 	private boolean mNeedLeftSpacing = false;
 

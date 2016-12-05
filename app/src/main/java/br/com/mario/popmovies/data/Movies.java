@@ -1,18 +1,32 @@
 package br.com.mario.popmovies.data;
 
+import android.databinding.BindingAdapter;
 import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.widget.ImageView;
 
 /** Created by MarioH on 01/11/2016. */
 public class Movies implements Parcelable {
+	public static final Parcelable.Creator<Movies> CREATOR = new Parcelable.Creator<Movies>() {
+		public Movies createFromParcel(Parcel in) {
+			return (new Movies(in));
+		}
+
+		public Movies[] newArray(int size) {
+			return (new Movies[size]);
+		}
+	};
+
 	private final int id;
+	private final double average;
 	private final String title;
 	private final String posterUrl;
 	private final String backdropUrl;
 	private final String releaseDate;
 	private final String synopsis;
-	private final double average;
+
+	private int pos;
 
 	private Bitmap poster;
 
@@ -37,8 +51,13 @@ public class Movies implements Parcelable {
 		average = in.readDouble();
 	}
 
+	@BindingAdapter("imageLoad")
+	public static void setImagePoster(ImageView view, Bitmap img) {
+		view.setImageBitmap(img);
+	}
+
 	public Bitmap getPoster() {
-		return (poster);//(new BitmapDrawable(ctx.getResources(), bitmap));
+		return (poster); //new BitmapDrawable(ctx.getResources(), poster)
 	}
 
 	public void setPoster(Bitmap poster) {
@@ -92,13 +111,11 @@ public class Movies implements Parcelable {
 		dest.writeDouble(average);
 	}
 
-	public static final Parcelable.Creator<Movies> CREATOR = new Parcelable.Creator<Movies>() {
-		public Movies createFromParcel(Parcel in) {
-			return (new Movies(in));
-		}
+	public int getPos() {
+		return (pos);
+	}
 
-		public Movies[] newArray(int size) {
-			return (new Movies[size]);
-		}
-	};
+	public void setPos(int pos) {
+		this.pos = pos;
+	}
 }

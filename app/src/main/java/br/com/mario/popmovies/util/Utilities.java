@@ -20,10 +20,14 @@ public class Utilities {
 		return (netInfo != null && netInfo.isConnectedOrConnecting());
 	}
 
+	/**
+	 * http://stackoverflow.com/q/33799950/3443949
+	 *
+	 * @return True: ping Ok
+	 */
 	public static boolean isOnline() {
 		Runtime runtime = Runtime.getRuntime();
 		try {
-
 			Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
 			int exitValue = ipProcess.waitFor();
 
@@ -31,8 +35,7 @@ public class Utilities {
 
 		} catch (IOException | InterruptedException e) {
 			e.printStackTrace();
+			return (false);
 		}
-
-		return (false);
 	}
 }
