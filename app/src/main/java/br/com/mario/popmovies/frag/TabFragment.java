@@ -41,6 +41,7 @@ import static br.com.mario.popmovies.util.GlobalConstants.APPID_PARAM;
 /** Created by MarioH on 08/11/2016. */
 public class TabFragment extends Fragment {
 	private static final String BUNDLE_RECYCLER_LAYOUT = "classname.recycler.layout";
+	public static final String MOVIE_TYPE_KEY = "movietype";
 	/** limite do número de páginas carregadas */
 	private static final int PAGE_LIMIT = 3;
 	private static final int visibleThreshold = 4;
@@ -64,7 +65,7 @@ public class TabFragment extends Fragment {
 	public static TabFragment newInstance(String type) {
 		TabFragment fragment = new TabFragment();
 		Bundle args = new Bundle();
-		args.putString("movietype", type);
+		args.putString(MOVIE_TYPE_KEY, type);
 		fragment.setArguments(args);
 
 		return (fragment);
@@ -74,8 +75,7 @@ public class TabFragment extends Fragment {
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		mType = getArguments().getString("movietype");
-
+		mType = getArguments().getString(MOVIE_TYPE_KEY);
 		mAdapter = MovieRecyclerAdapter.getInstance();
 	}
 
@@ -114,7 +114,7 @@ public class TabFragment extends Fragment {
 		super.onViewCreated(view, savedInstanceState);
 
 		if (savedInstanceState == null) {
-			if (Utilities.isOnline())
+//			if (Utilities.isOnline())
 				new GetMovies().execute(mType);
 		}
 		else {
@@ -172,6 +172,7 @@ public class TabFragment extends Fragment {
 		outState.putParcelable(BUNDLE_RECYCLER_LAYOUT, mLayoutManager.onSaveInstanceState());
 	}
 
+	/** Logic to load the list of movies when scrolling */
 	private void loadMovieList() {
 		if (loading) {
 			if (totalItemCount > previousTotal) {

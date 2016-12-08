@@ -18,12 +18,16 @@
 	<eat-comment/>
 	<string name="tab1_name">POPULAR</string>
 	<string name="tab2_name">MELHORES</string>
+	<string name="tab3_name">FAVORITOS</string>
 
 	<string name="hello_blank_fragment">NAO HÁ COMENTÁRIOS</string>
 
 	<string name="action_settings">Settings</string>
 	<string name="action_search">Buscar</string>
 	<string name="search_hint">Busque o filme</string>
+	
+	<!-- configuração de typeface para TextView -->
+	<string name="typefaceText">sans-serif-light</string>
 
 	<string name="sample_text" translatable="false">TextView</string>
 </resources>

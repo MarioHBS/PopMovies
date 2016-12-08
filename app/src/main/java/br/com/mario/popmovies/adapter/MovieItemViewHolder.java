@@ -1,8 +1,6 @@
 package br.com.mario.popmovies.adapter;
 
 import android.databinding.DataBindingUtil;
-import android.graphics.Typeface;
-import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
@@ -22,18 +20,7 @@ class MovieItemViewHolder extends RecyclerView.ViewHolder {
 	}
 
 	protected void bind(final Movies movie, int position) {
-		//		if (posterIv != null)
-		//			binding.ivPoster.setImageBitmap(movie.getPoster());
 		movie.setPos(position + 1);
-
-		//	binding.tvPosition.setText(position + 1 + "º");
-		//	binding.tvRating.setText(String.format(Locale.getDefault(), "%.1f", movie.getAverage()));
-
-		// compatibilidade para versões 15 ou menores
-		if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
-			binding.tvPosition.setTypeface(Typeface.create("sans-serif-light", Typeface.NORMAL));
-			binding.tvRating.setTypeface(Typeface.create("sans-serif-light", Typeface.NORMAL));
-		}
 
 		itemView.setOnClickListener(new View.OnClickListener() {
 			@Override

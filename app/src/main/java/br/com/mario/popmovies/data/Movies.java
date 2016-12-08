@@ -2,9 +2,18 @@ package br.com.mario.popmovies.data;
 
 import android.databinding.BindingAdapter;
 import android.graphics.Bitmap;
+import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.widget.ImageView;
+import android.widget.TextView;
+
+import br.com.mario.popmovies.PopMoviesApplication;
+import br.com.mario.popmovies.R;
+
+import static android.R.attr.value;
 
 /** Created by MarioH on 01/11/2016. */
 public class Movies implements Parcelable {
@@ -51,9 +60,19 @@ public class Movies implements Parcelable {
 		average = in.readDouble();
 	}
 
-	@BindingAdapter("imageLoad")
-	public static void setImagePoster(ImageView view, Bitmap img) {
-		view.setImageBitmap(img);
+	@BindingAdapter("typefaceLoad")
+	public static void setTypeface(TextView tv, String config){
+		// compatibilidade para versões 15 ou menores
+		if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1)
+			tv.setTypeface(Typeface.create(config, Typeface.BOLD));
+	}
+
+	@BindingAdapter(value={"imageLoad", "placeholder"}, requireAll = false)
+	public static void setImagePoster(ImageView view, Bitmap img, Drawable placeholder) {
+		if (img == null)
+			view.setImageDrawable(placeholder);
+		else
+			view.setImageBitmap(img);
 	}
 
 	public Bitmap getPoster() {

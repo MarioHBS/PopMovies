@@ -67,7 +67,7 @@
 				android:layout_below="@+id/tv_rate_title"
 				android:text="@string/sample_text"
 				android:textColor="@color/red_title"
-				/>
+			/>
 
 			<TextView
 				android:id="@+id/tv_synopsis_title"
