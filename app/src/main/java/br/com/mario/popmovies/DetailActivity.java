@@ -51,7 +51,7 @@ public class DetailActivity extends AppCompatActivity {
 		super.onCreate(savedInstanceState);
 		binding = DataBindingUtil.setContentView(this, R.layout.activity_detail);
 
-		setSupportActionBar(binding.toolbar);
+		setSupportActionBar(binding.toolbarDt);
 		supportActionBar = getSupportActionBar();
 
 		if (supportActionBar != null)

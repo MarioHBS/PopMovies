@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	>
+
+	<item
+		android:id="@+id/action_pop"
+		android:enabled="true"
+		android:icon="@drawable/ic_pop"
+		android:title="@string/tab1_name"
+		app:showAsAction="ifRoom"
+	/>
+
+	<item
+		android:id="@+id/action_most"
+		android:icon="@drawable/ic_best"
+		android:title="@string/tab2_name"
+		app:showAsAction="ifRoom"
+	/>
+
+	<item
+		android:id="@+id/action_fav"
+		android:icon="@drawable/ic_favorite"
+		android:title="@string/tab3_name"
+		app:showAsAction="ifRoom"
+	/>
+</menu>

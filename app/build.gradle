@@ -1,54 +1,56 @@
 apply plugin: 'com.android.application'
 
 android {
-   compileSdkVersion 25
-   buildToolsVersion "24.0.3"
+    compileSdkVersion 25
+    buildToolsVersion "24.0.3"
 
-   defaultConfig {
-      applicationId "br.com.mario.popmovies"
-      minSdkVersion 15
-      targetSdkVersion 25
-      versionCode 1
-      versionName "1.0"
-   }
-   buildTypes {
-      release {
-         minifyEnabled false
-         proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-      }
-   }
-   dataBinding {
-      enabled = true
-   }
-   compileOptions {
-      //      incremental true
+    defaultConfig {
+        applicationId "br.com.mario.popmovies"
+        minSdkVersion 15
+        targetSdkVersion 25
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    dataBinding {
+        enabled = true
+    }
+    compileOptions {
+        //      incremental true
 
-      sourceCompatibility JavaVersion.VERSION_1_7
-      targetCompatibility JavaVersion.VERSION_1_7
-   }
-   buildTypes.each {
-      it.buildConfigField 'String', 'TMDB_API_KEY', MyTheMovieDBApiKey
-   }
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
+    buildTypes.each {
+        it.buildConfigField 'String', 'TMDB_API_KEY', MyTheMovieDBApiKey
+    }
 }
 
 dependencies {
-   testCompile 'junit:junit:4.12'
+    testCompile 'junit:junit:4.12'
 
-   compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile fileTree(include: ['*.jar'], dir: 'libs')
 
-   compile 'com.android.support:design:25.0.1'
-   compile 'com.android.support:support-v4:25.0.1'
-   compile 'com.android.support:appcompat-v7:25.0.1'
-   compile 'com.android.support:recyclerview-v7:25.0.1'
-   compile 'com.android.support:support-annotations:25.0.1'
+    compile 'com.android.support:design:25.0.1'
+    compile 'com.android.support:support-v4:25.0.1'
+    compile 'com.android.support:appcompat-v7:25.0.1'
+    compile 'com.android.support:recyclerview-v7:25.0.1'
+    compile 'com.android.support:support-annotations:25.0.1'
 
-   compile 'com.github.bumptech.glide:glide:3.7.0'
-
-   compile 'com.ToxicBakery.viewpager.transforms:view-pager-transforms:1.2.32@aar'
+    //   third-party libraries
+    compile 'com.github.bumptech.glide:glide:3.7.0'
+    compile 'com.ToxicBakery.viewpager.transforms:view-pager-transforms:1.2.32@aar'
+    compile 'com.roughike:bottom-bar:2.0.2'
+    compile 'com.ncapdevi:frag-nav:1.2.5'
 //   compile 'com.github.chenupt.android:springindicator:1.0.2@aar'
 //   compile 'com.github.chenupt.android:multiplemodel:2.0.1@aar'
 
-   androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-      exclude group: 'com.android.support', module: 'support-annotations'
-   })
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
 }

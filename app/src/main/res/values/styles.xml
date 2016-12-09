@@ -28,4 +28,6 @@
 	<style name="AppTheme.ProgressAccent">
 		<item name="colorAccent">@color/red_title</item> <!-- Whatever color you want-->
 	</style>
+
+	<style name="AppTheme.TransNav" parent="AppTheme"/>
 </resources>

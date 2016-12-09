@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<tabs>
+	<tab
+		id="@+id/tab_pop"
+		icon="@drawable/ic_pop"
+		title="@string/tab1_name"
+	/>
+	<tab
+		id="@+id/tab_most"
+		icon="@drawable/ic_best"
+		title="@string/tab2_name"
+	/>
+	<tab
+		id="@+id/tab_fav"
+		icon="@drawable/ic_favorite"
+		title="@string/tab3_name"
+	/>
+</tabs>
