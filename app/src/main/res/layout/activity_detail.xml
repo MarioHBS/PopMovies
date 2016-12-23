@@ -9,7 +9,7 @@
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:fitsSystemWindows="true"
-		tools:context="br.com.mario.popmovies.DetailActivity"
+		tools:context="br.com.mario.popmovies.screens.DetailActivity"
 		>
 
 		<android.support.design.widget.AppBarLayout
@@ -63,6 +63,17 @@
 		<include
 			android:id="@+id/included"
 			layout="@layout/content_detail"
+		/>
+
+		<android.support.design.widget.FloatingActionButton
+			android:id="@+id/fav_fab"
+			android:visibility="visible"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_margin="@dimen/fab_margin"
+			android:onClick="onClickFab"
+			app:layout_anchor="@id/app_bar"
+			app:layout_anchorGravity="end|bottom|right"
 		/>
 
 	</android.support.design.widget.CoordinatorLayout>

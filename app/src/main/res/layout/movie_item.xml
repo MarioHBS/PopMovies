@@ -5,7 +5,7 @@
 	>
 
 	<data>
-		<import type="br.com.mario.popmovies.data.Movies"/>
+		<import type="br.com.mario.popmovies.model.Movies"/>
 		<variable
 			name="movie"
 			type="Movies"
@@ -29,8 +29,6 @@
 
 		<TextView
 			android:text='@{String.format("%dº", movie.pos)}'
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
 			android:layout_gravity="top|start"
 			android:layout_marginTop="@dimen/text_item_margin"
 			android:layout_marginLeft="@dimen/text_item_margin"
@@ -42,8 +40,6 @@
 
 		<TextView
 			android:text='@{String.format("%.1f", movie.average)}'
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
 			android:layout_gravity="bottom|end"
 			android:layout_marginBottom="@dimen/text_item_margin"
 			android:layout_marginRight="@dimen/text_item_margin"

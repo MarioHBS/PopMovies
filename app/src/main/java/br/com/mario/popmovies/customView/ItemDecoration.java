@@ -1,4 +1,4 @@
-package br.com.mario.popmovies.util;
+package br.com.mario.popmovies.customView;
 
 import android.graphics.Rect;
 import android.support.v7.widget.RecyclerView;

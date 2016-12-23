@@ -7,22 +7,22 @@ import android.graphics.Bitmap;
 
 import java.io.ByteArrayOutputStream;
 
-import br.com.mario.popmovies.data.Movies;
+import br.com.mario.popmovies.model.Movies;
 
-import static br.com.mario.popmovies.util.GlobalConstants.BACKDROP_KEY;
-import static br.com.mario.popmovies.util.GlobalConstants.MOVIE_ID_KEY;
-import static br.com.mario.popmovies.util.GlobalConstants.MOVIE_TITLE_KEY;
-import static br.com.mario.popmovies.util.GlobalConstants.POSTER_KEY;
-import static br.com.mario.popmovies.util.GlobalConstants.RELEASE_DATE_KEY;
-import static br.com.mario.popmovies.util.GlobalConstants.SYNOPSIS_KEY;
-import static br.com.mario.popmovies.util.GlobalConstants.VOTE_KEY;
+import static br.com.mario.popmovies.GlobalConstants.BACKDROP_KEY;
+import static br.com.mario.popmovies.GlobalConstants.MOVIE_ID_KEY;
+import static br.com.mario.popmovies.GlobalConstants.MOVIE_TITLE_KEY;
+import static br.com.mario.popmovies.GlobalConstants.POSTER_KEY;
+import static br.com.mario.popmovies.GlobalConstants.RELEASE_DATE_KEY;
+import static br.com.mario.popmovies.GlobalConstants.SYNOPSIS_KEY;
+import static br.com.mario.popmovies.GlobalConstants.VOTE_KEY;
 
 /** Created by MarioH on 09/11/2016. */
-public class PopMoviesApplication extends Application {
+public class PopMoviesApp extends Application {
 	public static Context CTX;
-	private static PopMoviesApplication instance;
+	private static PopMoviesApp instance;
 
-	public static PopMoviesApplication getInstance() {
+	public static PopMoviesApp get() {
 		return (instance);
 	}
 
@@ -60,6 +60,6 @@ public class PopMoviesApplication extends Application {
 		it.putExtra(RELEASE_DATE_KEY, mv.getReleaseDate());
 		it.putExtra(VOTE_KEY, mv.getAverage());
 
-		getInstance().startActivity(it);
+		get().startActivity(it);
 	}
 }

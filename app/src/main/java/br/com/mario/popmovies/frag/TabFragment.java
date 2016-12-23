@@ -25,21 +25,25 @@ import java.net.HttpURLConnection;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.List;
 
 import br.com.mario.popmovies.BuildConfig;
+import br.com.mario.popmovies.GlobalConstants;
 import br.com.mario.popmovies.R;
 import br.com.mario.popmovies.adapter.MovieRecyclerAdapter;
-import br.com.mario.popmovies.data.Movies;
+import br.com.mario.popmovies.customView.ItemDecoration;
 import br.com.mario.popmovies.databinding.TabFragPageBinding;
-import br.com.mario.popmovies.util.GlobalConstants;
-import br.com.mario.popmovies.util.ItemDecoration;
-import br.com.mario.popmovies.util.MoviesDataParser;
-import br.com.mario.popmovies.util.Utilities;
+import br.com.mario.popmovies.model.EventData;
+import br.com.mario.popmovies.model.Movies;
+import br.com.mario.popmovies.tools.Caching;
+import br.com.mario.popmovies.tools.MoviesDataParser;
+import br.com.mario.popmovies.tools.NetworkUtilities;
 
-import static br.com.mario.popmovies.util.GlobalConstants.APPID_PARAM;
+import static br.com.mario.popmovies.GlobalConstants.APPID_PARAM;
 
 /** Created by MarioH on 08/11/2016. */
 public class TabFragment extends Fragment {
+	//@formatter:off
 	private static final String BUNDLE_RECYCLER_LAYOUT = "classname.recycler.layout";
 	public static final String MOVIE_TYPE_KEY = "movietype";
 	/** limite do número de páginas carregadas */
@@ -60,6 +64,8 @@ public class TabFragment extends Fragment {
 
 	private boolean loading = true;
 	private String mType;
+	private String favType;
+	//@formatter:on
 
 	// newInstance constructor for creating fragment with arguments
 	public static TabFragment newInstance(String type) {
@@ -75,8 +81,10 @@ public class TabFragment extends Fragment {
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		mType = getArguments().getString(MOVIE_TYPE_KEY);
-		mAdapter = MovieRecyclerAdapter.getInstance();
+		setRetainInstance(true);
+		mType = getArguments().getString(MOVIE_TYPE_KEY, null);
+
+		favType = getString(R.string.favouritesData);
 	}
 
 	@Nullable
@@ -88,12 +96,11 @@ public class TabFragment extends Fragment {
 
 		binding = DataBindingUtil.inflate(inflater, R.layout.tab_frag_page, container, false);
 
+		mAdapter = MovieRecyclerAdapter.getInstance();
 		mLayoutManager = new GridLayoutManager(getContext(), SPAN_COUNT);
 		binding.listGridMovies.setLayoutManager(mLayoutManager);
 
 		binding.listGridMovies.setEmptyView(binding.emptyTv);
-
-		setRetainInstance(true);
 
 		return (binding.getRoot());
 	}
@@ -114,10 +121,12 @@ public class TabFragment extends Fragment {
 		super.onViewCreated(view, savedInstanceState);
 
 		if (savedInstanceState == null) {
-//			if (Utilities.isOnline())
-				new GetMovies().execute(mType);
-		}
-		else {
+			if (mType.equals(favType)) {
+				// TODO carregar os favoritos
+				getFromCache();
+			} else
+				updateData();
+		} else {
 			binding.progressSearch.setVisibility(View.GONE);
 			Parcelable savedRecyclerLayoutState = savedInstanceState.getParcelable
 					  (BUNDLE_RECYCLER_LAYOUT);
@@ -172,6 +181,49 @@ public class TabFragment extends Fragment {
 		outState.putParcelable(BUNDLE_RECYCLER_LAYOUT, mLayoutManager.onSaveInstanceState());
 	}
 
+	private void getFromCache() {
+		List<Integer> favouriteMovies = Caching.getFavouriteMovies(getActivity());
+		List<Movies> movieList = mAdapter.getList();
+
+		for (Movies mv : movieList) {
+			if (favouriteMovies.contains(mv.getId()))
+				mv.setFavourite(true);
+		}
+	}
+
+	public void notifyChange(EventData event) {
+		if (mAdapter == null) {
+			Toast.makeText(getContext(), "Adapter null", Toast.LENGTH_SHORT).show();
+		} else {
+			List<Movies> mList = mAdapter.getList();
+			if (!mList.isEmpty()) {
+				if (mType.equals(favType)) {
+					if (!event.isFavourite()) { // if the favourite is being removed
+						mList.remove(event.getMovieID());
+
+						if (mList.isEmpty())
+							;
+						// TODO: 20/12/2016 Mostrar lyout de Lista Vazia
+					} else {
+						Movies cacheData = Caching.getMovieCacheData(getActivity(), event.getMovieID());
+						if ((cacheData != null) && !mList.contains(cacheData)) {
+							mList.add(cacheData);
+							mAdapter.notifyDataSetChanged();
+						}
+					}
+				}
+			}
+		}
+	}
+
+	private void updateData() {
+		if (NetworkUtilities.isOnline())
+			new GetMovies().execute(mType);
+		else {
+			// TODO layout para mostrar favoritos vazio | esconder o layout de carregamento
+		}
+	}
+
 	/** Logic to load the list of movies when scrolling */
 	private void loadMovieList() {
 		if (loading) {
@@ -188,7 +240,7 @@ public class TabFragment extends Fragment {
 
 			Log.i("Yaeye!", "end called");
 
-			if (Utilities.isOnline()) {
+			if (NetworkUtilities.isOnline()) {
 				pageCount++;
 				binding.progressSearch.setVisibility(View.VISIBLE);
 				new GetMovies().execute(mType);
@@ -290,6 +342,8 @@ public class TabFragment extends Fragment {
 
 				binding.listGridMovies.setVisibility(View.VISIBLE);
 				binding.progressSearch.setVisibility(View.GONE);
+			} else {
+				// verificar se existe dados gravados na memoria do celular
 			}
 		}
 	}

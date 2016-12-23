@@ -1,7 +1,8 @@
-package br.com.mario.popmovies;
+package br.com.mario.popmovies.screens;
 
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -11,9 +12,11 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 
 import com.bumptech.glide.Glide;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 
 import java.io.BufferedReader;
@@ -24,18 +27,23 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
+import br.com.mario.popmovies.BuildConfig;
+import br.com.mario.popmovies.GlobalConstants;
+import br.com.mario.popmovies.R;
 import br.com.mario.popmovies.adapter.ReviewPageAdapter;
 import br.com.mario.popmovies.databinding.ActivityDetailBinding;
 import br.com.mario.popmovies.frag.ReviewFragment;
-import br.com.mario.popmovies.util.GlobalConstants;
+import br.com.mario.popmovies.model.EventData;
+import br.com.mario.popmovies.tools.Caching;
 
-import static br.com.mario.popmovies.util.GlobalConstants.APPID_PARAM;
-import static br.com.mario.popmovies.util.GlobalConstants.BACKDROP_KEY;
-import static br.com.mario.popmovies.util.GlobalConstants.MOVIE_ID_KEY;
-import static br.com.mario.popmovies.util.GlobalConstants.RELEASE_DATE_KEY;
-import static br.com.mario.popmovies.util.GlobalConstants.SYNOPSIS_KEY;
-import static br.com.mario.popmovies.util.GlobalConstants.VOTE_KEY;
-import static br.com.mario.popmovies.util.MoviesDataParser.getReviewsDataFromJson;
+import static br.com.mario.popmovies.GlobalConstants.APPID_PARAM;
+import static br.com.mario.popmovies.GlobalConstants.BACKDROP_KEY;
+import static br.com.mario.popmovies.GlobalConstants.FAVOURITE_KEY;
+import static br.com.mario.popmovies.GlobalConstants.MOVIE_ID_KEY;
+import static br.com.mario.popmovies.GlobalConstants.RELEASE_DATE_KEY;
+import static br.com.mario.popmovies.GlobalConstants.SYNOPSIS_KEY;
+import static br.com.mario.popmovies.GlobalConstants.VOTE_KEY;
+import static br.com.mario.popmovies.tools.MoviesDataParser.getReviewsDataFromJson;
 
 /** Classe para exibir os detalhes de um filme selecionado */
 public class DetailActivity extends AppCompatActivity {
@@ -45,6 +53,9 @@ public class DetailActivity extends AppCompatActivity {
 
 	private ActivityDetailBinding binding;
 	private ActionBar supportActionBar;
+	private Drawable favouriteDrawable, notFavouriteDrawable;
+	private boolean isFavourite;
+	private int movieID;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +64,10 @@ public class DetailActivity extends AppCompatActivity {
 
 		setSupportActionBar(binding.toolbar);
 		supportActionBar = getSupportActionBar();
+
+		favouriteDrawable = getResources().getDrawable(R.drawable.ic_favorite_white_24dp);
+		notFavouriteDrawable = getResources().getDrawable(R.drawable.ic_favorite_border_white_24dp);
+//		getDrawable(R.drawable.ic_favorite_white_24dp);
 
 		if (supportActionBar != null)
 			supportActionBar.setDisplayHomeAsUpEnabled(true);
@@ -70,11 +85,12 @@ public class DetailActivity extends AppCompatActivity {
 
 		final Intent it = getIntent();
 
-		int movieID = it.getIntExtra(MOVIE_ID_KEY, 0);
+		movieID = it.getIntExtra(MOVIE_ID_KEY, 0);
 		String releaseDateStr = it.getStringExtra(RELEASE_DATE_KEY);
 		String backExtraUrl = it.getStringExtra(BACKDROP_KEY);
-		double voteDbl = it.getDoubleExtra(VOTE_KEY, 0);
 		String synopsisTxt = it.getStringExtra(SYNOPSIS_KEY);
+		double voteDbl = it.getDoubleExtra(VOTE_KEY, 0);
+		isFavourite = it.getBooleanExtra(FAVOURITE_KEY, false);
 
 		// URI para recuperar a imagem de pôster
 		Uri backdropUri = Uri.parse(TMDB_POSTER_BASE_URL).buildUpon()
@@ -97,6 +113,8 @@ public class DetailActivity extends AppCompatActivity {
 		binding.included.tvSynopsis.setText(synopsisTxt);
 
 		new ReviewAsync().execute(reviewUri);
+
+		setFavButtonDrawable();
 	}
 
 	private void setReviewComponents(ArrayList<String> strings) {
@@ -110,6 +128,29 @@ public class DetailActivity extends AppCompatActivity {
 
 		ReviewPageAdapter mAdapter = new ReviewPageAdapter(getSupportFragmentManager(), fragList);
 		binding.included.mReviewPager.setAdapter(mAdapter);
+	}
+
+
+	public void onClickFab(View v) {
+		isFavourite = !isFavourite;
+		notifyChange();
+		setFavButtonDrawable();
+	}
+
+	private void notifyChange() {
+		Caching.setFavouriteMovie(this, movieID);
+
+		EventBus.getDefault().post(new EventData(movieID, isFavourite));
+
+		//		MainActivity parent = null;
+		//		if (parent != null) {
+		//			parent.notifyFavouriteChange(movieID, isFavourite);
+		//		} else
+		//			Toast.makeText(this, "NULO", Toast.LENGTH_SHORT).show();
+	}
+
+	private void setFavButtonDrawable() {
+		binding.favFab.setImageDrawable((isFavourite) ? favouriteDrawable : notFavouriteDrawable);
 	}
 
 	private class ReviewAsync extends AsyncTask<Uri, Void, ArrayList<String>> {

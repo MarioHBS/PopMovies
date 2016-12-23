@@ -1,4 +1,4 @@
-package br.com.mario.popmovies.data;
+package br.com.mario.popmovies.model;
 
 import android.databinding.BindingAdapter;
 import android.graphics.Bitmap;
@@ -10,10 +10,8 @@ import android.os.Parcelable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import br.com.mario.popmovies.PopMoviesApplication;
-import br.com.mario.popmovies.R;
-
-import static android.R.attr.value;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 /** Created by MarioH on 01/11/2016. */
 public class Movies implements Parcelable {
@@ -30,6 +28,8 @@ public class Movies implements Parcelable {
 	private final int id;
 	private final double average;
 	private final String title;
+	@SerializedName("poster_path")
+	@Expose
 	private final String posterUrl;
 	private final String backdropUrl;
 	private final String releaseDate;
@@ -38,6 +38,8 @@ public class Movies implements Parcelable {
 	private int pos;
 
 	private Bitmap poster;
+
+	private boolean isFavourite;
 
 	public Movies(int id, String title, String posterUrl, String backdropUrl, String releaseDate,
 	              String synopsis, double average) {
@@ -136,5 +138,9 @@ public class Movies implements Parcelable {
 
 	public void setPos(int pos) {
 		this.pos = pos;
+	}
+
+	public void setFavourite(boolean favourite) {
+		this.isFavourite = favourite;
 	}
 }

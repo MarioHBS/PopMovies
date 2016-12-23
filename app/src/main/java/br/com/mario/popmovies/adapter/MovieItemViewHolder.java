@@ -4,10 +4,10 @@ import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import br.com.mario.popmovies.DetailActivity;
-import br.com.mario.popmovies.PopMoviesApplication;
-import br.com.mario.popmovies.data.Movies;
+import br.com.mario.popmovies.PopMoviesApp;
 import br.com.mario.popmovies.databinding.MovieItemBinding;
+import br.com.mario.popmovies.model.Movies;
+import br.com.mario.popmovies.screens.DetailActivity;
 
 /** Created by MarioH on 25/10/2016. */
 class MovieItemViewHolder extends RecyclerView.ViewHolder {
@@ -25,7 +25,7 @@ class MovieItemViewHolder extends RecyclerView.ViewHolder {
 		itemView.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				PopMoviesApplication.startActivity(DetailActivity.class, movie);
+				PopMoviesApp.startActivity(DetailActivity.class, movie);
 			}
 		});
 

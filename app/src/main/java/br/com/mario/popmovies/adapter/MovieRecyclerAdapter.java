@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.com.mario.popmovies.R;
-import br.com.mario.popmovies.data.Movies;
+import br.com.mario.popmovies.model.Movies;
 
 /** Created by MarioH on 25/10/2016. */
 public class MovieRecyclerAdapter extends RecyclerView.Adapter<MovieItemViewHolder> {

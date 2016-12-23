@@ -1,4 +1,4 @@
-package br.com.mario.popmovies;
+package br.com.mario.popmovies.screens;
 
 import android.app.SearchManager;
 import android.content.Intent;
@@ -25,11 +25,13 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import br.com.mario.popmovies.BuildConfig;
+import br.com.mario.popmovies.R;
 import br.com.mario.popmovies.adapter.MovieRecyclerAdapter;
-import br.com.mario.popmovies.data.Movies;
+import br.com.mario.popmovies.customView.ItemDecoration;
 import br.com.mario.popmovies.databinding.TabFragPageBinding;
-import br.com.mario.popmovies.util.ItemDecoration;
-import br.com.mario.popmovies.util.MoviesDataParser;
+import br.com.mario.popmovies.model.Movies;
+import br.com.mario.popmovies.tools.MoviesDataParser;
 
 public class SearchActivity extends AppCompatActivity {
 	private static final String TAG = SearchActivity.class.getSimpleName();

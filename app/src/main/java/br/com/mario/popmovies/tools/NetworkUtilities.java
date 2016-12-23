@@ -1,4 +1,4 @@
-package br.com.mario.popmovies.util;
+package br.com.mario.popmovies.tools;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -11,7 +11,7 @@ import java.io.IOException;
  *
  * Created by MarioH on 19/11/2016.
  */
-public class Utilities {
+public class NetworkUtilities {
 	public static boolean isNetworkActivated(Context ctx) {
 		ConnectivityManager cm = (ConnectivityManager) ctx.getSystemService(Context
 				  .CONNECTIVITY_SERVICE);

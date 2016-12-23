@@ -1,9 +1,14 @@
 <resources>
+	<!-- constants -->
 	<string name="app_name" translatable="false">PopMovies</string>
 	<string name="title_activity_detail" translatable="false">DetailActivity</string>
+	<string name="position" translatable="false">Position</string>
+	<string name="sample_text" translatable="false">TextView</string>
+	<string name="popularData" translatable="false">popular</string>
+	<string name="topRatedData" translatable="false">top_rated</string>
+	<string name="favouritesData" translatable="false">favorites</string>
 
 	<string name="setting">Configurações</string>
-	<string name="position" translatable="false">Position</string>
 	<string name="release_date">Data de Lançamento</string>
 	<string name="rating">Nota</string>
 	<string name="reviews">Comentários</string>
@@ -29,5 +34,7 @@
 	<!-- configuração de typeface para TextView -->
 	<string name="typefaceText">sans-serif-light</string>
 
-	<string name="sample_text" translatable="false">TextView</string>
+	<!-- Preference keys -->
+	<string name="fav_prefs_key" translatable="false">FAV_MOVIE_KEY</string>
+	<string name="fav_movies_prefs_key" translatable="false">FAV_MOVIES</string>
 </resources>

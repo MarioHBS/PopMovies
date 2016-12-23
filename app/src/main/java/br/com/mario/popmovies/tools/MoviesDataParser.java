@@ -1,4 +1,4 @@
-package br.com.mario.popmovies.util;
+package br.com.mario.popmovies.tools;
 
 import android.content.Context;
 import android.net.Uri;
@@ -15,7 +15,7 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
-import br.com.mario.popmovies.data.Movies;
+import br.com.mario.popmovies.model.Movies;
 
 import static com.bumptech.glide.gifdecoder.GifHeaderParser.TAG;
 
@@ -72,6 +72,7 @@ public class MoviesDataParser {
 				Log.e(TAG, "getMovieDataFromJson: " + e.getCause(), e);
 				// TODO Tratar: Request failed 404: Not Found
 				e.printStackTrace();
+				listMovie[i].setPoster(null);
 			}
 
 			Log.d(TAG, "Movies names: " + movie.getString(TITLE));

@@ -1,4 +1,4 @@
-package br.com.mario.popmovies;
+package br.com.mario.popmovies.screens;
 
 import android.app.SearchManager;
 import android.content.ComponentName;
@@ -19,8 +19,14 @@ import android.widget.Toast;
 
 import com.ToxicBakery.viewpager.transforms.StackTransformer;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
+import br.com.mario.popmovies.R;
 import br.com.mario.popmovies.adapter.MoviePageAdapter;
 import br.com.mario.popmovies.databinding.ActivityMainBinding;
+import br.com.mario.popmovies.frag.TabFragment;
+import br.com.mario.popmovies.model.EventData;
 
 public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
 	private static final String TAG = MainActivity.class.getSimpleName();
@@ -29,10 +35,13 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 	private String currentQuery;
 	private SearchView searchView;
 
+	private ActivityMainBinding mBinding;
+	private MoviePageAdapter mPageAdapter;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		ActivityMainBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+		mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
 		{
 			final ActionBar actionBar;
@@ -47,13 +56,16 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 		StrictMode.setThreadPolicy(policy);
 
-		MoviePageAdapter mPageAdapter = new MoviePageAdapter(getSupportFragmentManager());
+		mPageAdapter = new MoviePageAdapter(getSupportFragmentManager());
 
-		//	binding.viewPager.setOffscreenPageLimit(2); // offscreen pages to preload
 		//	SpringIndicator indicator = (SpringIndicator) findViewById(R.id.indicator);
 
-		binding.viewPager.setAdapter(mPageAdapter);
-		binding.viewPager.setPageTransformer(true, new StackTransformer());
+//		mBinding.viewPager.setOffscreenPageLimit(2); // offscreen pages to preload
+		mBinding.viewPager.setAdapter(mPageAdapter);
+		mBinding.viewPager.setPageTransformer(true, new StackTransformer());
+
+		// Register as a subscriber
+		EventBus.getDefault().register(this);
 	}
 
 	@Override
@@ -137,6 +149,27 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 	public boolean onQueryTextChange(String newText) {
 		//		currentQuery = newText;
 		return (false);
+	}
+
+	@Subscribe
+	public void notifyFavouriteChange(EventData data) {
+//		int currentItem = mBinding.viewPager.getCurrentItem();
+
+		TabFragment item = (TabFragment) mPageAdapter.getItem(2);
+		item.notifyChange(data);
+	}
+
+	@Override
+	public void onStart() {
+		super.onStart();
+
+	}
+
+	@Override
+	protected void onDestroy() {
+		// Unregister
+		EventBus.getDefault().unregister(this);
+		super.onDestroy();
 	}
 }
 
